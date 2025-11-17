@@ -13,7 +13,7 @@
       --ink: #111111;
       --soft: #6B6B6B;
       --border: #E5E5E5;
-      --radius: 18px;
+      --radius: 22px;
     }
 
     * { box-sizing: border-box; }
@@ -21,7 +21,7 @@
     body {
       margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg);
+      background: radial-gradient(circle at top, #FFF3E0 0, #FFFFFF 55%);
       color: var(--ink);
       min-height: 100vh;
       display: flex;
@@ -31,63 +31,83 @@
 
     .page {
       width: 100%;
-      max-width: 720px;
-      padding: 16px;
+      max-width: 900px;
+      padding: 40px 16px 48px;
     }
 
     .title {
-      font-size: 20px;
-      font-weight: 600;
-      margin-bottom: 14px;
+      font-size: 24px;
+      font-weight: 700;
       text-align: center;
+      letter-spacing: 0.03em;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 13px;
+      color: var(--soft);
+      margin-bottom: 28px;
     }
 
     .menu {
       display: grid;
       grid-template-columns: 1fr 1fr; /* даже на телефоне слева/справа */
-      gap: 10px;
+      gap: 14px;
+    }
+
+    @media (max-width: 480px) {
+      .page {
+        padding-top: 32px;
+      }
     }
 
     .menu-card {
       border-radius: var(--radius);
       border: 1px solid var(--border);
-      padding: 16px 10px;
+      padding: 20px 18px;
       background: #fff;
-      text-align: center;
       cursor: pointer;
-      font-size: 15px;
-      font-weight: 600;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      gap: 4px;
-      min-height: 96px;
+      gap: 6px;
+      min-height: 112px;
       outline: none;
-      transition: border-color 0.12s ease-out, box-shadow 0.12s ease-out, transform 0.12s ease-out;
+      transition: border-color 0.14s ease-out,
+                  box-shadow 0.14s ease-out,
+                  transform 0.14s ease-out,
+                  background 0.14s ease-out;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.04);
     }
 
     .menu-card span {
-      font-size: 11px;
+      font-size: 12px;
       color: var(--soft);
       font-weight: 400;
     }
 
     .menu-card--bmi {
       border-color: rgba(207,44,2,0.25);
-    }
-
-    .menu-card--bmi:hover {
-      box-shadow: 0 10px 24px rgba(207,44,2,0.18);
-      transform: translateY(-1px);
+      background: linear-gradient(135deg, #FFFFFF, #FFF4ED);
     }
 
     .menu-card--cal {
       border-color: rgba(255,186,8,0.6);
+      background: linear-gradient(135deg, #FFFFFF, #FFFBEA);
+    }
+
+    .menu-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.12);
+    }
+
+    .menu-card--bmi:hover {
+      background: linear-gradient(135deg, #FFF7F2, #FFE4D6);
     }
 
     .menu-card--cal:hover {
-      box-shadow: 0 10px 24px rgba(255,186,8,0.25);
-      transform: translateY(-1px);
+      background: linear-gradient(135deg, #FFFDF1, #FFEEC4);
     }
 
     /* МОДАЛКИ */
@@ -123,7 +143,6 @@
     }
 
     .modal__head {
-      position: relative;
       padding: 10px 14px;
       border-bottom: 1px solid #F1F1F1;
       display: flex;
@@ -196,6 +215,11 @@
     .field select:focus {
       border-color: var(--red);
       background: #FFFFFF;
+    }
+
+    .field small {
+      font-size: 11px;
+      color: var(--soft);
     }
 
     .btn {
@@ -360,6 +384,7 @@
 <body>
   <div class="page">
     <div class="title">ШАГАЙ ДОМА — калькуляторы</div>
+    <div class="subtitle">Быстро посчитать ИМТ и свои калории на день — без лишней воды.</div>
 
     <div class="menu">
       <button class="menu-card menu-card--bmi" data-modal-target="modal-bmi">
@@ -434,7 +459,7 @@
           </div>
         </div>
 
-        <!-- Содержимое вкладки "Ваша норма калорий" -->
+        <!-- Вкладка: Ваша норма -->
         <div class="tab-content tab-content--active" data-cal-content="norm">
           <form id="normForm">
             <div class="row">
@@ -488,23 +513,45 @@
           </form>
         </div>
 
-        <!-- Содержимое вкладки "Посчитать калории за день" -->
+        <!-- Вкладка: Калории за день -->
         <div class="tab-content" data-cal-content="day">
           <form id="foodForm">
             <div class="row">
               <div class="field">
                 <label for="foodName">Продукт</label>
-                <input id="foodName" type="text" placeholder="йогурт, яблоко…" required>
+                <input id="foodName" type="text" list="foodOptions" placeholder="яблоко, банан, гречка…" required>
+                <datalist id="foodOptions">
+                  <option value="Яблоко">
+                  <option value="Банан">
+                  <option value="Гречка варёная">
+                  <option value="Овсянка на воде">
+                  <option value="Куриная грудка без кожи">
+                  <option value="Йогурт натуральный 2%">
+                  <option value="Творог 5%">
+                  <option value="Яйцо куриное">
+                  <option value="Сыр твёрдый">
+                  <option value="Огурец">
+                  <option value="Помидор">
+                  <option value="Рис отварной">
+                </datalist>
+              </div>
+            </div>
+            <div class="row">
+              <div class="field">
+                <label for="foodAmount">Количество, г</label>
+                <input id="foodAmount" type="number" min="1" step="1" required>
               </div>
               <div class="field">
-                <label for="foodKcal">Калории, ккал</label>
-                <input id="foodKcal" type="number" min="0" step="1" required>
+                <label for="foodPer100">Ккал на 100 г (если знаете)</label>
+                <input id="foodPer100" type="number" min="0" step="1" placeholder="опционально">
+                <small>Если продукт есть в списке, подставим автоматически.</small>
               </div>
             </div>
             <div class="btns">
               <button class="btn btn--red" type="submit">Добавить</button>
               <button class="btn btn--gray" type="button" id="foodReset">Очистить день</button>
             </div>
+            <div id="foodError" class="error" style="display:none;"></div>
           </form>
 
           <div id="foodList" class="food-list" style="display:none;"></div>
@@ -585,7 +632,7 @@
     });
 
     // ---------- КАЛОРИИ: НОРМА ----------
-    let dailyNorm = null; // используется и во вкладке "что я съела"
+    let dailyNorm = null; // используется и во вкладке "Калории за день"
 
     const normForm = document.getElementById('normForm');
     const normError = document.getElementById('normError');
@@ -646,13 +693,39 @@
       updateFoodSummary();
     });
 
+    // ---------- БАЗА ПРОДУКТОВ ----------
+    const FOOD_DB = {
+      'яблоко': 52,
+      'банан': 89,
+      'гречка вареная': 110,
+      'гречка варёная': 110,
+      'овсянка на воде': 68,
+      'куриная грудка без кожи': 165,
+      'йогурт натуральный 2%': 60,
+      'творог 5%': 120,
+      'яйцо куриное': 155,
+      'сыр твердый': 350,
+      'сыр твёрдый': 350,
+      'огурец': 15,
+      'помидор': 18,
+      'рис отварной': 120
+    };
+
+    function normName(str) {
+      return str
+        .toLowerCase()
+        .replace(/ё/g, 'е')
+        .trim();
+    }
+
     // ---------- КАЛОРИИ: КАЛОРИИ ЗА ДЕНЬ ----------
     const foodForm = document.getElementById('foodForm');
     const foodList = document.getElementById('foodList');
     const foodSummary = document.getElementById('foodSummary');
     const foodReset = document.getElementById('foodReset');
+    const foodError = document.getElementById('foodError');
 
-    let foods = []; // { name, kcal }
+    let foods = []; // { name, kcal, grams }
 
     function renderFoodList() {
       if (!foods.length) {
@@ -663,7 +736,7 @@
       foodList.style.display = 'block';
       foodList.innerHTML = foods.map(item => `
         <div class="food-row">
-          <div class="food-name">${item.name}</div>
+          <div class="food-name">${item.name} — ${item.grams} г</div>
           <div class="food-kcal">${item.kcal} ккал</div>
         </div>
       `).join('');
@@ -692,17 +765,45 @@
 
     foodForm.addEventListener('submit', (e) => {
       e.preventDefault();
+      foodError.style.display = 'none';
+      foodError.textContent = '';
+
       const nameInput = document.getElementById('foodName');
-      const kcalInput = document.getElementById('foodKcal');
+      const amountInput = document.getElementById('foodAmount');
+      const per100Input = document.getElementById('foodPer100');
 
       const name = nameInput.value.trim();
-      const kcal = parseInt(kcalInput.value, 10);
+      const grams = parseInt(amountInput.value, 10);
+      const per100Manual = parseInt(per100Input.value, 10);
 
-      if (!name || !kcal || kcal < 0) return;
+      if (!name || !grams || grams <= 0) {
+        return;
+      }
 
-      foods.push({ name, kcal });
+      let per100 = NaN;
+
+      if (per100Manual && per100Manual > 0) {
+        per100 = per100Manual;
+      } else {
+        const key = normName(name);
+        if (FOOD_DB[key]) {
+          per100 = FOOD_DB[key];
+        }
+      }
+
+      if (!per100 || per100 <= 0) {
+        foodError.textContent = 'Не нашли калорийность этого продукта. Введите «ккал на 100 г» и попробуйте ещё раз.';
+        foodError.style.display = 'block';
+        return;
+      }
+
+      const kcal = Math.round(per100 * grams / 100);
+
+      foods.push({ name, grams, kcal });
+
       nameInput.value = '';
-      kcalInput.value = '';
+      amountInput.value = '';
+      // не очищаем per100, чтобы можно было добавлять похожие продукты подряд
 
       renderFoodList();
       updateFoodSummary();
@@ -712,6 +813,8 @@
       foods = [];
       renderFoodList();
       updateFoodSummary();
+      foodError.style.display = 'none';
+      foodError.textContent = '';
     });
 
     // ---------- Переключение табов в калькуляторе калорий ----------
