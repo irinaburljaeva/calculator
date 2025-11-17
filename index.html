@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Калькуляторы ШАГАЙ ДОМА</title>
+  <title>ШАГАЙ ДОМА — калькуляторы</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <style>
@@ -10,17 +10,13 @@
       --red: #CF2C02;
       --yellow: #FFBA08;
       --bg: #FFFFFF;
-      --ink: #222222;
-      --ink-soft: #5A5A5A;
-      --card-border: #F0F0F0;
-      --shadow-soft: 0 18px 45px rgba(0,0,0,0.06);
-      --radius-lg: 24px;
-      --radius-xl: 32px;
+      --ink: #111111;
+      --soft: #6B6B6B;
+      --border: #E5E5E5;
+      --radius: 18px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -33,174 +29,80 @@
       justify-content: center;
     }
 
-    .page-wrap {
+    .page {
       width: 100%;
-      max-width: 1120px;
-      padding: 24px 16px 40px;
-      margin: 0 auto;
+      max-width: 720px;
+      padding: 16px;
     }
 
-    .page-header {
-      text-align: center;
-      margin-bottom: 24px;
-    }
-
-    .page-title {
-      font-size: 28px;
-      line-height: 1.2;
-      font-weight: 700;
-      margin: 0 0 8px;
-    }
-
-    .page-subtitle {
-      font-size: 15px;
-      color: var(--ink-soft);
-      margin: 0;
-    }
-
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 20px;
-    }
-
-    @media (max-width: 768px) {
-      .cards-grid {
-        grid-template-columns: 1fr;
-      }
-      .page-header {
-        text-align: left;
-      }
-      .page-title {
-        font-size: 22px;
-      }
-    }
-
-    .calc-card {
-      border-radius: var(--radius-xl);
-      border: 1px solid var(--card-border);
-      box-shadow: var(--shadow-soft);
-      padding: 20px 20px 18px;
-      background: #fff;
-      cursor: pointer;
-      transition: transform 0.15s ease-out, box-shadow 0.15s ease-out,
-                  border-color 0.15s ease-out;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .calc-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at top right, rgba(255,186,8,0.16), transparent 55%);
-      opacity: 0;
-      transition: opacity 0.2s ease-out;
-      pointer-events: none;
-    }
-
-    .calc-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 22px 55px rgba(0,0,0,0.08);
-      border-color: rgba(207,44,2,0.16);
-    }
-
-    .calc-card:hover::before {
-      opacity: 1;
-    }
-
-    .calc-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      border-radius: 999px;
-      padding: 4px 10px;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      background: rgba(207,44,2,0.06);
-      color: var(--red);
-      margin-bottom: 10px;
-      font-weight: 600;
-    }
-
-    .pill-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: var(--red);
-    }
-
-    .calc-title {
+    .title {
       font-size: 20px;
-      font-weight: 700;
-      margin: 0 0 8px;
-    }
-
-    .calc-text {
-      font-size: 14px;
-      color: var(--ink-soft);
-      margin: 0 0 18px;
-    }
-
-    .calc-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 18px;
-    }
-
-    .tag {
-      font-size: 11px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: #FFF8E3;
-      color: #8A5A02;
-      border: 1px solid rgba(255,186,8,0.4);
-    }
-
-    .calc-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      border-radius: 999px;
-      padding: 9px 14px;
-      font-size: 13px;
       font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      background: var(--red);
-      color: white;
-      border: none;
-      pointer-events: none; /* вся карточка кликабельна */
+      margin-bottom: 14px;
+      text-align: center;
     }
 
-    .calc-cta-icon {
-      width: 18px;
-      height: 18px;
-      border-radius: 999px;
-      background: white;
-      display: inline-flex;
-      align-items: center;
+    .menu {
+      display: grid;
+      grid-template-columns: 1fr 1fr; /* даже на телефоне слева/справа */
+      gap: 10px;
+    }
+
+    .menu-card {
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 16px 10px;
+      background: #fff;
+      text-align: center;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
       justify-content: center;
-      font-size: 12px;
-      color: var(--red);
+      gap: 4px;
+      min-height: 96px;
+      outline: none;
+      transition: border-color 0.12s ease-out, box-shadow 0.12s ease-out, transform 0.12s ease-out;
     }
 
-    /* МОДАЛЬНЫЕ ОКНА */
+    .menu-card span {
+      font-size: 11px;
+      color: var(--soft);
+      font-weight: 400;
+    }
 
+    .menu-card--bmi {
+      border-color: rgba(207,44,2,0.25);
+    }
+
+    .menu-card--bmi:hover {
+      box-shadow: 0 10px 24px rgba(207,44,2,0.18);
+      transform: translateY(-1px);
+    }
+
+    .menu-card--cal {
+      border-color: rgba(255,186,8,0.6);
+    }
+
+    .menu-card--cal:hover {
+      box-shadow: 0 10px 24px rgba(255,186,8,0.25);
+      transform: translateY(-1px);
+    }
+
+    /* МОДАЛКИ */
     .modal {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.30);
+      background: rgba(0,0,0,0.35);
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 16px;
+      padding: 10px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.18s ease-out;
-      z-index: 40;
+      transition: opacity 0.15s ease-out;
+      z-index: 30;
     }
 
     .modal--active {
@@ -208,82 +110,58 @@
       pointer-events: auto;
     }
 
-    .modal-dialog {
+    .modal__dialog {
       width: 100%;
-      max-width: 620px;
+      max-width: 520px;
       max-height: 100%;
       background: #fff;
-      border-radius: var(--radius-xl);
-      box-shadow: 0 26px 80px rgba(0,0,0,0.22);
+      border-radius: 20px;
       display: flex;
       flex-direction: column;
       overflow: hidden;
     }
 
-    @media (max-width: 640px) {
-      .modal-dialog {
-        border-radius: 20px;
-        max-width: 100%;
-      }
-    }
-
-    .modal-header {
-      padding: 16px 20px;
-      border-bottom: 1px solid #F0F0F0;
+    .modal__head {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      padding: 10px 14px;
+      border-bottom: 1px solid #F1F1F1;
     }
 
-    .modal-title {
-      font-size: 18px;
-      font-weight: 700;
-      margin: 0;
+    .modal__title {
+      font-size: 16px;
+      font-weight: 600;
     }
 
-    .modal-subtitle {
-      font-size: 12px;
-      color: var(--ink-soft);
-      margin-top: 2px;
-    }
-
-    .modal-close {
+    .modal__close {
       border-radius: 999px;
       border: none;
-      background: #F5F5F5;
-      width: 32px;
-      height: 32px;
+      background: #F3F3F3;
+      width: 30px;
+      height: 30px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       font-size: 18px;
-      line-height: 1;
-      color: #555;
-      flex-shrink: 0;
-      transition: background 0.12s ease-out, transform 0.12s ease-out;
     }
 
-    .modal-close:hover {
-      background: #E8E8E8;
-      transform: translateY(-1px);
-    }
-
-    .modal-body {
-      padding: 16px 20px 20px;
+    .modal__body {
+      padding: 12px 14px 14px;
       overflow-y: auto;
+      font-size: 14px;
     }
 
-    .form-grid {
+    .row {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px 14px;
-      margin-bottom: 14px;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
     }
 
-    @media (max-width: 540px) {
-      .form-grid {
+    @media (max-width: 480px) {
+      .row {
         grid-template-columns: 1fr;
       }
     }
@@ -292,339 +170,296 @@
       display: flex;
       flex-direction: column;
       gap: 4px;
-      font-size: 13px;
     }
 
     .field label {
-      font-weight: 500;
-    }
-
-    .field small {
-      font-size: 11px;
-      color: var(--ink-soft);
+      font-size: 13px;
     }
 
     .field input,
     .field select {
       border-radius: 999px;
-      border: 1px solid #D8D8D8;
-      padding: 8px 12px;
+      border: 1px solid var(--border);
+      padding: 7px 10px;
       font-size: 14px;
       font-family: inherit;
       outline: none;
-      transition: border-color 0.12s ease-out, box-shadow 0.12s ease-out;
     }
 
     .field input:focus,
     .field select:focus {
       border-color: var(--red);
-      box-shadow: 0 0 0 1px rgba(207,44,2,0.12);
     }
 
-    .form-actions {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .btn-primary {
-      border-radius: 999px;
-      padding: 9px 18px;
-      border: none;
-      font-size: 14px;
-      font-weight: 600;
-      background: linear-gradient(135deg, var(--red), #E85D04);
-      color: #fff;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      box-shadow: 0 12px 30px rgba(207,44,2,0.35);
-      transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 16px 40px rgba(207,44,2,0.45);
-    }
-
-    .btn-secondary {
+    .btn {
       border-radius: 999px;
       padding: 8px 14px;
-      border: 1px solid #E0E0E0;
+      border: none;
       font-size: 13px;
-      background: #FAFAFA;
       cursor: pointer;
-      color: var(--ink-soft);
-    }
-
-    .result-box {
-      margin-top: 12px;
-      border-radius: 16px;
-      background: #FFF8E6;
-      border: 1px solid rgba(255,186,8,0.6);
-      padding: 10px 12px;
-      font-size: 13px;
-      line-height: 1.4;
-    }
-
-    .result-title {
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    .result-highlight {
-      font-weight: 700;
-      color: var(--red);
-    }
-
-    .result-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       gap: 6px;
-      margin-top: 6px;
     }
 
-    @media (max-width: 480px) {
-      .result-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+    .btn--red {
+      background: var(--red);
+      color: #fff;
     }
 
-    .result-chip {
-      font-size: 12px;
-      padding: 6px 8px;
-      border-radius: 999px;
-      background: #FFFFFF;
-      border: 1px dashed rgba(255,186,8,0.8);
-      text-align: center;
+    .btn--gray {
+      background: #F3F3F3;
+      color: var(--soft);
     }
 
-    .result-chip span {
-      display: block;
-      font-weight: 600;
-    }
-
-    .hint {
-      font-size: 11px;
-      color: var(--ink-soft);
-      margin-top: 6px;
+    .btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+      margin-bottom: 8px;
     }
 
     .error {
       font-size: 12px;
       color: #C81E1E;
+      margin-top: 4px;
+    }
+
+    .box {
+      border-radius: 12px;
+      border: 1px solid #FFF0C2;
+      background: #FFF9E7;
+      padding: 8px 10px;
+      font-size: 13px;
+      margin-top: 8px;
+    }
+
+    .box strong {
+      color: var(--red);
+    }
+
+    .divider {
+      height: 1px;
+      background: #F1F1F1;
+      margin: 10px 0;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      border-radius: 999px;
+      padding: 2px 8px;
+      border: 1px solid #FFE18C;
+      background: #FFF9E7;
+      color: #A36A00;
+    }
+
+    .food-list {
       margin-top: 6px;
+      font-size: 12px;
+      border-radius: 10px;
+      border: 1px solid #F0F0F0;
+      padding: 6px 8px;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+
+    .food-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 3px 0;
+      border-bottom: 1px dashed #ECECEC;
+    }
+
+    .food-row:last-child {
+      border-bottom: none;
+    }
+
+    .food-name {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .food-kcal {
+      font-weight: 500;
+    }
+
+    .summary {
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    .summary strong {
+      color: var(--red);
     }
   </style>
 </head>
 <body>
-  <div class="page-wrap">
-    <header class="page-header">
-      <h1 class="page-title">Калькуляторы ШАГАЙ ДОМА</h1>
-      <p class="page-subtitle">
-        Быстро посчитайте свой ИМТ и дневную норму калорий и КБЖУ, чтобы тренировки приносили максимум пользы.
-      </p>
-    </header>
+  <div class="page">
+    <div class="title">ШАГАЙ ДОМА — калькуляторы</div>
 
-    <section class="cards-grid">
-      <!-- КАРТОЧКА ИМТ -->
-      <article class="calc-card" data-modal-target="modal-bmi">
-        <div class="calc-pill">
-          <span class="pill-dot"></span> Контроль здоровья
-        </div>
-        <h2 class="calc-title">Калькулятор ИМТ</h2>
-        <p class="calc-text">
-          Узнайте индекс массы тела, чтобы понимать, где вы сейчас: дефицит, норма, лишний вес или ожирение.
-        </p>
-        <div class="calc-tags">
-          <span class="tag">Вес и рост</span>
-          <span class="tag">Мгновенный результат</span>
-          <span class="tag">Рекомендации по диапазону</span>
-        </div>
-        <button class="calc-cta" type="button">
-          <div class="calc-cta-icon">➜</div>
-          Открыть калькулятор
-        </button>
-      </article>
-
-      <!-- КАРТОЧКА КБЖУ -->
-      <article class="calc-card" data-modal-target="modal-calories">
-        <div class="calc-pill" style="background:rgba(255,186,8,0.14); color:#8A4A00;">
-          <span class="pill-dot" style="background:var(--yellow);"></span> Питание и энергия
-        </div>
-        <h2 class="calc-title">Калькулятор калорий и КБЖУ</h2>
-        <p class="calc-text">
-          Посчитайте, сколько калорий, белков, жиров и углеводов вам нужно в день для похудения или поддержания веса.
-        </p>
-        <div class="calc-tags">
-          <span class="tag">С учётом активности</span>
-          <span class="tag">Под цели похудения</span>
-          <span class="tag">Баланс Б/Ж/У</span>
-        </div>
-        <button class="calc-cta" type="button">
-          <div class="calc-cta-icon">➜</div>
-          Открыть калькулятор
-        </button>
-      </article>
-    </section>
+    <div class="menu">
+      <button class="menu-card menu-card--bmi" data-modal-target="modal-bmi">
+        ИМТ
+        <span>быстрая оценка веса</span>
+      </button>
+      <button class="menu-card menu-card--cal" data-modal-target="modal-cal">
+        Калории / КБЖУ
+        <span>норма и что вы съели</span>
+      </button>
+    </div>
   </div>
 
-  <!-- МОДАЛЬНОЕ ОКНО ИМТ -->
+  <!-- МОДАЛ: ИМТ -->
   <div class="modal" id="modal-bmi">
-    <div class="modal-dialog">
-      <div class="modal-header">
-        <div>
-          <h3 class="modal-title">Калькулятор ИМТ</h3>
-          <div class="modal-subtitle">
-            Индекс массы тела помогает ориентироваться, в каком диапазоне веса вы находитесь.
-          </div>
-        </div>
-        <button class="modal-close" type="button" data-modal-close>
-          ✕
-        </button>
+    <div class="modal__dialog">
+      <div class="modal__head">
+        <div class="modal__title">Калькулятор ИМТ</div>
+        <button class="modal__close" type="button" data-modal-close>✕</button>
       </div>
-      <div class="modal-body">
+      <div class="modal__body">
         <form id="bmiForm">
-          <div class="form-grid">
+          <div class="row">
             <div class="field">
               <label for="bmiWeight">Вес, кг</label>
               <input id="bmiWeight" type="number" step="0.1" min="30" max="250" required>
-              <small>Введите текущий вес.</small>
             </div>
             <div class="field">
               <label for="bmiHeight">Рост, см</label>
               <input id="bmiHeight" type="number" step="1" min="120" max="220" required>
-              <small>Например, 165.</small>
             </div>
           </div>
-
-          <div class="form-actions">
-            <button class="btn-primary" type="submit">
-              Рассчитать ИМТ
-            </button>
-            <button class="btn-secondary" type="button" id="bmiReset">
-              Сбросить
-            </button>
+          <div class="btns">
+            <button class="btn btn--red" type="submit">Рассчитать</button>
+            <button class="btn btn--gray" type="button" id="bmiReset">Сброс</button>
           </div>
-
           <div id="bmiError" class="error" style="display:none;"></div>
-
-          <div id="bmiResult" class="result-box" style="display:none;">
-            <div class="result-title">Ваш результат:</div>
-            <div id="bmiResultText"></div>
-            <div class="hint">
-              ИМТ — это ориентир, а не приговор. В «ШАГАЙ ДОМА» мы делаем акцент на самочувствии, силе и выносливости.
-            </div>
-          </div>
+          <div id="bmiResult" class="box" style="display:none;"></div>
         </form>
       </div>
     </div>
   </div>
 
-  <!-- МОДАЛЬНОЕ ОКНО КБЖУ -->
-  <div class="modal" id="modal-calories">
-    <div class="modal-dialog">
-      <div class="modal-header">
-        <div>
-          <h3 class="modal-title">Калькулятор калорий и КБЖУ</h3>
-          <div class="modal-subtitle">
-            Примерный расчёт дневной нормы калорий и баланса Б/Ж/У под вашу цель.
-          </div>
-        </div>
-        <button class="modal-close" type="button" data-modal-close>
-          ✕
-        </button>
+  <!-- МОДАЛ: КАЛОРИИ -->
+  <div class="modal" id="modal-cal">
+    <div class="modal__dialog">
+      <div class="modal__head">
+        <div class="modal__title">Калории и КБЖУ</div>
+        <button class="modal__close" type="button" data-modal-close>✕</button>
       </div>
-      <div class="modal-body">
-        <form id="caloriesForm">
-          <div class="form-grid">
+      <div class="modal__body">
+        <!-- БЛОК 1 — НОРМА -->
+        <div class="section-title">
+          Норма в день
+          <span class="pill">расчёт по параметрам</span>
+        </div>
+        <form id="normForm">
+          <div class="row">
             <div class="field">
-              <label for="calSex">Пол</label>
-              <select id="calSex" required>
+              <label for="sex">Пол</label>
+              <select id="sex" required>
                 <option value="female" selected>Женщина</option>
                 <option value="male">Мужчина</option>
               </select>
             </div>
-
             <div class="field">
-              <label for="calAge">Возраст, лет</label>
-              <input id="calAge" type="number" min="16" max="90" required>
+              <label for="age">Возраст</label>
+              <input id="age" type="number" min="16" max="90" required>
             </div>
-
+          </div>
+          <div class="row">
             <div class="field">
-              <label for="calWeight">Вес, кг</label>
-              <input id="calWeight" type="number" step="0.1" min="40" max="250" required>
+              <label for="weight">Вес, кг</label>
+              <input id="weight" type="number" step="0.1" min="40" max="250" required>
             </div>
-
             <div class="field">
-              <label for="calHeight">Рост, см</label>
-              <input id="calHeight" type="number" step="1" min="140" max="220" required>
+              <label for="height">Рост, см</label>
+              <input id="height" type="number" step="1" min="140" max="220" required>
             </div>
-
+          </div>
+          <div class="row">
             <div class="field">
-              <label for="calActivity">Активность</label>
-              <select id="calActivity" required>
-                <option value="1.2">Мало двигаюсь (сидячая работа)</option>
-                <option value="1.375">Лёгкие тренировки 1–3 раза в неделю</option>
-                <option value="1.55" selected>Умеренная активность 3–5 раз в неделю</option>
-                <option value="1.725">Высокая активность 6–7 раз в неделю</option>
+              <label for="activity">Активность</label>
+              <select id="activity" required>
+                <option value="1.2">Сидячий день</option>
+                <option value="1.375">Лёгкие тренировки</option>
+                <option value="1.55" selected>3–5 тренировок в неделю</option>
+                <option value="1.725">Очень активный день</option>
               </select>
-              <small>Можно ориентироваться на ваш ритм тренировок в «ШАГАЙ ДОМА».</small>
             </div>
-
             <div class="field">
-              <label for="calGoal">Цель</label>
-              <select id="calGoal" required>
+              <label for="goal">Цель</label>
+              <select id="goal" required>
                 <option value="loss" selected>Похудеть</option>
-                <option value="maintain">Поддерживать вес</option>
-                <option value="gain">Набирать мышечную массу</option>
+                <option value="maintain">Держать вес</option>
+                <option value="gain">Набирать</option>
               </select>
             </div>
           </div>
-
-          <div class="form-actions">
-            <button class="btn-primary" type="submit">
-              Рассчитать норму
-            </button>
-            <button class="btn-secondary" type="button" id="caloriesReset">
-              Сбросить
-            </button>
+          <div class="btns">
+            <button class="btn btn--red" type="submit">Рассчитать норму</button>
+            <button class="btn btn--gray" type="button" id="normReset">Сброс</button>
           </div>
+          <div id="normError" class="error" style="display:none;"></div>
+          <div id="normResult" class="box" style="display:none;"></div>
+        </form>
 
-          <div id="caloriesError" class="error" style="display:none;"></div>
+        <div class="divider"></div>
 
-          <div id="caloriesResult" class="result-box" style="display:none;">
-            <div class="result-title">Рекомендуемая дневная норма:</div>
-            <div id="caloriesResultText"></div>
-
-            <div class="result-grid" id="macrosGrid"></div>
-
-            <div class="hint">
-              Расчёт приблизительный. В реальных тренировках мы всегда ориентируемся на самочувствие, прогресс и комфорт.
+        <!-- БЛОК 2 — ЧТО Я СЪЕЛА -->
+        <div class="section-title">
+          Что я съела
+          <span class="pill">дневник за день</span>
+        </div>
+        <form id="foodForm">
+          <div class="row">
+            <div class="field">
+              <label for="foodName">Продукт</label>
+              <input id="foodName" type="text" placeholder="йогурт, яблоко…" required>
             </div>
+            <div class="field">
+              <label for="foodKcal">Калории, ккал</label>
+              <input id="foodKcal" type="number" min="0" step="1" required>
+            </div>
+          </div>
+          <div class="btns">
+            <button class="btn btn--red" type="submit">Добавить</button>
+            <button class="btn btn--gray" type="button" id="foodReset">Очистить день</button>
           </div>
         </form>
+
+        <div id="foodList" class="food-list" style="display:none;"></div>
+        <div id="foodSummary" class="summary" style="display:none;"></div>
       </div>
     </div>
   </div>
 
   <script>
-    // Открытие модалок
-    document.querySelectorAll('.calc-card').forEach(card => {
+    // ---------- общая логика модалок ----------
+    document.querySelectorAll('.menu-card').forEach(card => {
       card.addEventListener('click', () => {
-        const targetId = card.getAttribute('data-modal-target');
-        const modal = document.getElementById(targetId);
+        const id = card.getAttribute('data-modal-target');
+        const modal = document.getElementById(id);
         if (modal) modal.classList.add('modal--active');
       });
     });
 
-    // Закрытие по крестику и клику по фону
     document.querySelectorAll('[data-modal-close]').forEach(btn => {
       btn.addEventListener('click', () => {
         const modal = btn.closest('.modal');
@@ -634,68 +469,61 @@
 
     document.querySelectorAll('.modal').forEach(modal => {
       modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-          modal.classList.remove('modal--active');
-        }
+        if (e.target === modal) modal.classList.remove('modal--active');
       });
     });
 
-    // --- КАЛЬКУЛЯТОР ИМТ ---
+    // ---------- ИМТ ----------
     const bmiForm = document.getElementById('bmiForm');
     const bmiError = document.getElementById('bmiError');
-    const bmiResultBox = document.getElementById('bmiResult');
-    const bmiResultText = document.getElementById('bmiResultText');
-    const bmiResetBtn = document.getElementById('bmiReset');
+    const bmiResult = document.getElementById('bmiResult');
+    const bmiReset = document.getElementById('bmiReset');
 
-    function classifyBMI(bmi) {
-      if (bmi < 18.5) return 'дефицит массы тела';
+    function bmiStatus(bmi) {
+      if (bmi < 18.5) return 'дефицит массы';
       if (bmi < 25) return 'норма';
-      if (bmi < 30) return 'избыточная масса тела';
+      if (bmi < 30) return 'избыточный вес';
       return 'ожирение';
     }
 
     bmiForm.addEventListener('submit', (e) => {
       e.preventDefault();
       bmiError.style.display = 'none';
-      bmiResultBox.style.display = 'none';
+      bmiResult.style.display = 'none';
 
-      const weight = parseFloat(document.getElementById('bmiWeight').value.replace(',', '.'));
-      const heightCm = parseFloat(document.getElementById('bmiHeight').value.replace(',', '.'));
+      const w = parseFloat(document.getElementById('bmiWeight').value.replace(',', '.'));
+      const hCm = parseFloat(document.getElementById('bmiHeight').value.replace(',', '.'));
 
-      if (!weight || !heightCm || weight <= 0 || heightCm <= 0) {
-        bmiError.textContent = 'Пожалуйста, заполните вес и рост корректными значениями.';
+      if (!w || !hCm || w <= 0 || hCm <= 0) {
+        bmiError.textContent = 'Проверьте вес и рост.';
         bmiError.style.display = 'block';
         return;
       }
 
-      const heightM = heightCm / 100;
-      const bmi = weight / (heightM * heightM);
-      const bmiRounded = bmi.toFixed(1);
-      const status = classifyBMI(bmi);
+      const h = hCm / 100;
+      const bmi = w / (h * h);
+      const s = bmiStatus(bmi);
 
-      bmiResultText.innerHTML = `
-        Ваш ИМТ: <span class="result-highlight">${bmiRounded}</span> — это <strong>${status}</strong>.<br>
-        Оптимальный диапазон ИМТ для большинства взрослых: примерно <strong>18,5–24,9</strong>.
-      `;
-      bmiResultBox.style.display = 'block';
+      bmiResult.innerHTML = `ИМТ: <strong>${bmi.toFixed(1)}</strong> — ${s}.`;
+      bmiResult.style.display = 'block';
     });
 
-    bmiResetBtn.addEventListener('click', () => {
+    bmiReset.addEventListener('click', () => {
       bmiForm.reset();
       bmiError.style.display = 'none';
-      bmiResultBox.style.display = 'none';
+      bmiResult.style.display = 'none';
     });
 
-    // --- КАЛЬКУЛЯТОР КАЛОРИЙ И КБЖУ ---
-    const caloriesForm = document.getElementById('caloriesForm');
-    const caloriesError = document.getElementById('caloriesError');
-    const caloriesResultBox = document.getElementById('caloriesResult');
-    const caloriesResultText = document.getElementById('caloriesResultText');
-    const macrosGrid = document.getElementById('macrosGrid');
-    const caloriesResetBtn = document.getElementById('caloriesReset');
+    // ---------- КАЛОРИИ: НОРМА ----------
+    let dailyNorm = null; // будет использоваться в дневнике питания
 
-    function calcBMR({ sex, weight, height, age }) {
-      // Формула Миффлина — Сан Жеора
+    const normForm = document.getElementById('normForm');
+    const normError = document.getElementById('normError');
+    const normResult = document.getElementById('normResult');
+    const normReset = document.getElementById('normReset');
+
+    function calcBMR(sex, weight, height, age) {
+      // Миффлин-Сан Жеор
       if (sex === 'female') {
         return 10 * weight + 6.25 * height - 5 * age - 161;
       } else {
@@ -703,78 +531,117 @@
       }
     }
 
-    caloriesForm.addEventListener('submit', (e) => {
+    normForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      caloriesError.style.display = 'none';
-      caloriesResultBox.style.display = 'none';
-      macrosGrid.innerHTML = '';
+      normError.style.display = 'none';
+      normResult.style.display = 'none';
 
-      const sex = document.getElementById('calSex').value;
-      const age = parseInt(document.getElementById('calAge').value, 10);
-      const weight = parseFloat(document.getElementById('calWeight').value.replace(',', '.'));
-      const height = parseFloat(document.getElementById('calHeight').value.replace(',', '.'));
-      const activity = parseFloat(document.getElementById('calActivity').value);
-      const goal = document.getElementById('calGoal').value;
+      const sex = document.getElementById('sex').value;
+      const age = parseInt(document.getElementById('age').value, 10);
+      const weight = parseFloat(document.getElementById('weight').value.replace(',', '.'));
+      const height = parseFloat(document.getElementById('height').value.replace(',', '.'));
+      const activity = parseFloat(document.getElementById('activity').value);
+      const goal = document.getElementById('goal').value;
 
       if (!age || !weight || !height || age <= 0 || weight <= 0 || height <= 0) {
-        caloriesError.textContent = 'Проверьте корректность введённых данных: возраст, вес и рост.';
-        caloriesError.style.display = 'block';
+        normError.textContent = 'Проверьте введённые данные.';
+        normError.style.display = 'block';
         return;
       }
 
-      const bmr = calcBMR({ sex, weight, height, age });
-      const tdee = bmr * activity; // базовый расход с учётом активности
+      const bmr = calcBMR(sex, weight, height, age);
+      let tdee = bmr * activity;
 
-      let targetCalories = tdee;
-      let goalText = 'поддержания текущего веса';
+      if (goal === 'loss') tdee *= 0.85;
+      if (goal === 'gain') tdee *= 1.15;
 
-      if (goal === 'loss') {
-        targetCalories = tdee * 0.85; // ~15% дефицит
-        goalText = 'комфортного похудения';
-      } else if (goal === 'gain') {
-        targetCalories = tdee * 1.15; // ~15% профицит
-        goalText = 'набора массы';
-      }
+      dailyNorm = Math.round(tdee);
 
-      const calRounded = Math.round(targetCalories);
+      let txtGoal = 'поддержания веса';
+      if (goal === 'loss') txtGoal = 'похудения';
+      if (goal === 'gain') txtGoal = 'набора массы';
 
-      // Примерное распределение БЖУ: 30% белки, 30% жиры, 40% углеводы
-      const proteinKcal = calRounded * 0.30;
-      const fatKcal = calRounded * 0.30;
-      const carbKcal = calRounded * 0.40;
+      normResult.innerHTML = `Ориентир для <strong>${txtGoal}</strong>: <strong>${dailyNorm} ккал</strong> в день.`;
+      normResult.style.display = 'block';
 
-      const proteinGr = Math.round(proteinKcal / 4);
-      const fatGr = Math.round(fatKcal / 9);
-      const carbGr = Math.round(carbKcal / 4);
-
-      caloriesResultText.innerHTML = `
-        Примерная норма для <strong>${goalText}</strong> — 
-        <span class="result-highlight">${calRounded} ккал</span> в день.
-      `;
-
-      macrosGrid.innerHTML = `
-        <div class="result-chip">
-          <span>${proteinGr} г</span>
-          белки
-        </div>
-        <div class="result-chip">
-          <span>${fatGr} г</span>
-          жиры
-        </div>
-        <div class="result-chip">
-          <span>${carbGr} г</span>
-          углеводы
-        </div>
-      `;
-
-      caloriesResultBox.style.display = 'block';
+      // обновим сводку по еде, если уже что-то добавлено
+      updateFoodSummary();
     });
 
-    caloriesResetBtn.addEventListener('click', () => {
-      caloriesForm.reset();
-      caloriesError.style.display = 'none';
-      caloriesResultBox.style.display = 'none';
-      macrosGrid.innerHTML = '';
+    normReset.addEventListener('click', () => {
+      normForm.reset();
+      normError.style.display = 'none';
+      normResult.style.display = 'none';
+      dailyNorm = null;
+      updateFoodSummary();
+    });
+
+    // ---------- КАЛОРИИ: ЧТО Я СЪЕЛА ----------
+    const foodForm = document.getElementById('foodForm');
+    const foodList = document.getElementById('foodList');
+    const foodSummary = document.getElementById('foodSummary');
+    const foodReset = document.getElementById('foodReset');
+
+    let foods = []; // { name, kcal }
+
+    function renderFoodList() {
+      if (!foods.length) {
+        foodList.style.display = 'none';
+        foodList.innerHTML = '';
+        return;
+      }
+      foodList.style.display = 'block';
+      foodList.innerHTML = foods.map(item => `
+        <div class="food-row">
+          <div class="food-name">${item.name}</div>
+          <div class="food-kcal">${item.kcal} ккал</div>
+        </div>
+      `).join('');
+    }
+
+    function updateFoodSummary() {
+      if (!foods.length) {
+        foodSummary.style.display = 'none';
+        foodSummary.innerHTML = '';
+        return;
+      }
+      const total = foods.reduce((sum, item) => sum + item.kcal, 0);
+      let html = `Всего за день: <strong>${total} ккал</strong>.`;
+
+      if (dailyNorm && dailyNorm > 0) {
+        const percent = (total / dailyNorm) * 100;
+        const left = dailyNorm - total;
+        const sign = left >= 0 ? 'осталось' : 'перебор';
+        const absLeft = Math.abs(left);
+        html += ` Это <strong>${percent.toFixed(0)}%</strong> от вашей нормы, ${sign} примерно <strong>${absLeft} ккал</strong>.`;
+      }
+
+      foodSummary.innerHTML = html;
+      foodSummary.style.display = 'block';
+    }
+
+    foodForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const nameInput = document.getElementById('foodName');
+      const kcalInput = document.getElementById('foodKcal');
+
+      const name = nameInput.value.trim();
+      const kcal = parseInt(kcalInput.value, 10);
+
+      if (!name || !kcal || kcal < 0) return;
+
+      foods.push({ name, kcal });
+      nameInput.value = '';
+      kcalInput.value = '';
+
+      renderFoodList();
+      updateFoodSummary();
+    });
+
+    foodReset.addEventListener('click', () => {
+      foods = [];
+      renderFoodList();
+      updateFoodSummary();
     });
   </script>
 </body>
