@@ -43,7 +43,6 @@
       margin-bottom: 24px;
     }
 
-    /* Карточки стартового экрана */
     .menu {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -73,7 +72,6 @@
       color: var(--soft);
     }
 
-    /* Модалки */
     .modal {
       position: fixed;
       inset: 0;
@@ -125,7 +123,6 @@
       overflow-y: auto;
     }
 
-    /* Формы */
     .field {
       display: flex;
       flex-direction: column;
@@ -189,7 +186,6 @@
       margin-top: 8px;
     }
 
-    /* Карточки продуктов */
     .food-card {
       border: 1px solid #F1F1F1;
       background: #FFFFFF;
@@ -208,7 +204,6 @@
       color: #444;
     }
 
-    /* Блоки приёмов пищи */
     .meal-block {
       margin-bottom: 18px;
       padding: 12px 0;
@@ -220,7 +215,6 @@
       margin-bottom: 10px;
     }
 
-    /* Всплывающая мини-панель выбора приёма пищи */
     .meal-popup {
       position: absolute;
       background: #fff;
@@ -248,7 +242,6 @@
       border-color: var(--red);
     }
 
-    /* Итоги дня */
     .day-summary {
       background: #FFF9EB;
       border: 1px solid #FFE5B6;
@@ -259,7 +252,6 @@
     }
     .day-summary strong { color: var(--red); }
 
-    /* Табы внутри калькулятора калорий */
     .cal-tabs {
       display: flex;
       gap: 6px;
@@ -285,7 +277,6 @@
       font-weight: 600;
     }
 
-    /* Подсказки API под полем продукта */
     .suggestions-box {
       position: absolute;
       background: #fff;
@@ -304,7 +295,6 @@
       cursor: pointer;
     }
     .suggestion-item:hover { background: #FFF2E0; }
-
   </style>
 </head>
 
@@ -326,7 +316,7 @@
     </div>
   </div>
 
-  <!-- ============ МОДАЛКА ИМТ ============ -->
+  <!-- МОДАЛКА ИМТ -->
   <div class="modal" id="modal-bmi">
     <div class="modal__dialog">
       <button class="modal__close" data-close>✕</button>
@@ -356,7 +346,7 @@
     </div>
   </div>
 
-  <!-- ============ МОДАЛКА КАЛОРИЙ / КБЖУ ============ -->
+  <!-- МОДАЛКА КАЛОРИЙ -->
   <div class="modal" id="modal-calories">
     <div class="modal__dialog">
       <button class="modal__close" data-close>✕</button>
@@ -364,13 +354,12 @@
 
       <div class="modal__body">
 
-        <!-- Табы -->
         <div class="cal-tabs">
           <button class="cal-tab cal-tab-active" data-cal-tab="norm">Ваша норма на день</button>
           <button class="cal-tab" data-cal-tab="day">Калории за день</button>
         </div>
 
-        <!-- ----- Вкладка 1: НОРМА НА ДЕНЬ ----- -->
+        <!-- Вкладка 1 -->
         <div id="calTab-norm">
           <form id="normForm">
 
@@ -398,13 +387,13 @@
             </div>
 
             <div class="field">
-              <label for="activity">Пример вашей физической активности</label>
+              <label for="activity">Как примерно проходит ваш день?</label>
               <select id="activity">
-                <option value="1.2">КФА 1,2 — сидячий день, без тренировок</option>
-                <option value="1.375">КФА 1,375 — тренировки 1–3 раза в неделю</option>
-                <option value="1.55" selected>КФА 1,55 — 3–4 тренировки в неделю</option>
-                <option value="1.7">КФА 1,7 — 5–7 тренировок или активная работа</option>
-                <option value="1.9">КФА 1,9 — очень высокая нагрузка/спорт</option>
+                <option value="1.2">Сидячая работа, почти нет движения</option>
+                <option value="1.375">Есть лёгкие тренировки 1–3 раза в неделю</option>
+                <option value="1.55" selected>Тренировки 3–4 раза в неделю</option>
+                <option value="1.7">Тренировки 5–7 раз в неделю или активная работа</option>
+                <option value="1.9">Очень высокая физическая нагрузка, спорт</option>
               </select>
             </div>
 
@@ -414,8 +403,8 @@
             </div>
 
             <div class="field">
-              <label for="stepMinutes">Сколько минут шагательных тренировок в неделю?</label>
-              <input id="stepMinutes" type="number" min="0" placeholder="Например: 90 (3 тренировки по 30 минут)">
+              <label for="stepMinutesDay">Сколько минут шагательных тренировок в день?</label>
+              <input id="stepMinutesDay" type="number" min="0" placeholder="Например: 20–40 минут">
             </div>
 
             <div class="field">
@@ -429,8 +418,8 @@
             <div class="field">
               <label for="goal">Цель</label>
               <select id="goal">
-                <option value="loss500">Похудение — дефицит ~500 ккал/день</option>
-                <option value="loss700">Похудение — дефицит ~700 ккал/день</option>
+                <option value="lossModerate">Похудение: умеренный темп</option>
+                <option value="lossSlow">Похудение: медленный темп</option>
                 <option value="maintain">Поддержание веса</option>
                 <option value="gain">Набор массы</option>
               </select>
@@ -447,10 +436,9 @@
           </form>
         </div>
 
-        <!-- ----- Вкладка 2: КАЛОРИИ ЗА ДЕНЬ ----- -->
+        <!-- Вкладка 2 -->
         <div id="calTab-day" style="display:none;">
 
-          <!-- Поля продукта -->
           <div class="field" style="position:relative;">
             <label for="foodName">Название продукта/блюда</label>
             <input id="foodName" type="text" placeholder="Например: яблоко, гречка, суп сырный…" autocomplete="off">
@@ -485,7 +473,6 @@
             <button type="button" id="clearDay" class="btn btn-gray">Очистить день</button>
           </div>
 
-          <!-- Всплывающее меню выбора приёма пищи -->
           <div id="mealPopup" class="meal-popup">
             <button data-meal="breakfast">Добавить в Завтрак</button>
             <button data-meal="lunch">Добавить в Обед</button>
@@ -493,28 +480,26 @@
             <button data-meal="snack">Добавить в Перекус</button>
           </div>
 
-          <!-- Приёмы пищи -->
-          <div class="meal-block" id="block-breakfast">
+          <div class="meal-block">
             <div class="meal-title">Завтрак</div>
             <div id="list-breakfast"></div>
           </div>
 
-          <div class="meal-block" id="block-lunch">
+          <div class="meal-block">
             <div class="meal-title">Обед</div>
             <div id="list-lunch"></div>
           </div>
 
-          <div class="meal-block" id="block-dinner">
+          <div class="meal-block">
             <div class="meal-title">Ужин</div>
             <div id="list-dinner"></div>
           </div>
 
-          <div class="meal-block" id="block-snack">
+          <div class="meal-block">
             <div class="meal-title">Перекус</div>
             <div id="list-snack"></div>
           </div>
 
-          <!-- Итог дня -->
           <div id="daySummary" class="day-summary" style="display:none;"></div>
         </div>
 
@@ -523,7 +508,7 @@
   </div>
 
   <script>
-    /* ========= МОДАЛКИ ========= */
+    /* Модалки */
     document.querySelectorAll("[data-open]").forEach(btn => {
       btn.addEventListener("click", () => {
         document.getElementById(btn.dataset.open).classList.add("active");
@@ -540,7 +525,7 @@
       });
     });
 
-    /* ========= ТАБЫ КАЛОРИЙ ========= */
+    /* Табы */
     const calTabs = document.querySelectorAll(".cal-tab");
     function activateCalTab(name) {
       calTabs.forEach(btn => {
@@ -552,7 +537,7 @@
     calTabs.forEach(btn => btn.addEventListener("click", () => activateCalTab(btn.dataset.calTab)));
     activateCalTab("norm");
 
-    /* ========= ИМТ ========= */
+    /* ИМТ */
     const bmiForm = document.getElementById("bmiForm");
     const bmiError = document.getElementById("bmiError");
     const bmiResult = document.getElementById("bmiResult");
@@ -592,7 +577,7 @@
       bmiResult.style.display = "none";
     });
 
-    /* ========= НОРМА КАЛОРИЙ + localStorage ========= */
+    /* Норма калорий и localStorage */
     let dailyNorm = null;
     const normForm = document.getElementById("normForm");
     const normError = document.getElementById("normError");
@@ -609,7 +594,6 @@
     };
 
     function calcBMR(sex, weight, height, age) {
-      // Формула Миффлина — Сан Жеора
       return sex === "female"
         ? 10 * weight + 6.25 * height - 5 * age - 161
         : 10 * weight + 6.25 * height - 5 * age + 5;
@@ -617,11 +601,8 @@
 
     function saveNormToStorage() {
       try {
-        if (dailyNorm != null) {
-          localStorage.setItem(STORAGE_NORM_KEY, String(dailyNorm));
-        } else {
-          localStorage.removeItem(STORAGE_NORM_KEY);
-        }
+        if (dailyNorm != null) localStorage.setItem(STORAGE_NORM_KEY, String(dailyNorm));
+        else localStorage.removeItem(STORAGE_NORM_KEY);
       } catch (e) {}
     }
 
@@ -688,7 +669,7 @@
       const height = Number(document.getElementById("heightNorm").value);
       let activity = Number(document.getElementById("activity").value);
       const steps = Number(document.getElementById("stepsPerDay").value) || 0;
-      const stepMinutes = Number(document.getElementById("stepMinutes").value) || 0;
+      const stepMinutesDay = Number(document.getElementById("stepMinutesDay").value) || 0;
       const hormones = document.getElementById("hormones").value === "yes";
       const goal = document.getElementById("goal").value;
 
@@ -698,31 +679,31 @@
         return;
       }
 
-      // Базовый обмен
       const bmr = calcBMR(sex, weight, height, age);
 
-      // Уточняем КФА по шагам и шагательным тренировкам (мягкая поправка)
+      // базовый КФА
       let kfa = activity;
+
+      // шаги (мягкая корректировка)
       if (steps >= 8000 && steps < 10000) kfa += 0.05;
       else if (steps >= 10000) kfa += 0.1;
 
-      if (stepMinutes >= 30 && stepMinutes < 60) kfa += 0.05;
-      else if (stepMinutes >= 60) kfa += 0.1;
+      // шагательные тренировки — минуты в день
+      if (stepMinutesDay >= 20 && stepMinutesDay < 40) kfa += 0.05;
+      else if (stepMinutesDay >= 40) kfa += 0.1;
 
       if (kfa > 1.9) kfa = 1.9;
 
       let tdee = bmr * kfa;
 
-      // Мужчинам +100 ккал
+      // мужчинам +100 ккал
       if (sex === "male") tdee += 100;
 
-      // Цели по дефициту/профициту
       let deficit = 0;
-      if (goal === "loss500") deficit = 500;
-      else if (goal === "loss700") deficit = 700;
-      else if (goal === "gain") tdee += 200; // лёгкий профицит
+      if (goal === "lossModerate") deficit = 500;
+      else if (goal === "lossSlow") deficit = 700;
+      else if (goal === "gain") tdee += 200;
 
-      // Если есть гормональные нарушения — делаем дефицит мягче
       if (deficit > 0) {
         if (hormones) deficit = Math.round(deficit * 0.8);
         tdee -= deficit;
@@ -730,19 +711,18 @@
 
       dailyNorm = Math.round(tdee);
 
-      // Эффективный вес по формуле Дёренберга (цель: 10% жира у мужчин, 15% у женщин)
+      // Эффективный вес (формула Дёренберга, цель 10%/15% жира)
       const heightM = height / 100;
       const sexFlag = sex === "male" ? 1 : 0;
       const targetBF = sex === "male" ? 10 : 15;
       let bmiTarget = (targetBF + 10.8 * sexFlag + 5.4 - 0.23 * age) / 1.2;
-      if (bmiTarget < 18) bmiTarget = 18; // не уходим в слишком низкий ИМТ
+      if (bmiTarget < 18) bmiTarget = 18;
       const effectiveWeight = Math.round(bmiTarget * heightM * heightM);
 
-      // Макросы (ориентировочно)
-      const proteinG = Math.round(effectiveWeight * 1.6); // г/кг
+      const proteinG = Math.round(effectiveWeight * 1.6);
       const fatG = Math.round(effectiveWeight * 0.8);
-      let proteinKcal = proteinG * 4;
-      let fatKcal = fatG * 9;
+      const proteinKcal = proteinG * 4;
+      const fatKcal = fatG * 9;
       let carbsKcal = dailyNorm - proteinKcal - fatKcal;
       if (carbsKcal < 0) carbsKcal = 0;
       const carbsG = Math.round(carbsKcal / 4);
@@ -776,7 +756,7 @@
       updateDaySummary();
     });
 
-    /* ========= API OPENFOODFACTS (подсказки) ========= */
+    /* OpenFoodFacts подсказки */
     const foodNameInput = document.getElementById("foodName");
     const suggestionsBox = document.getElementById("suggestions");
     let lastSearchTime = 0;
@@ -784,7 +764,7 @@
 
     async function searchOFF(query) {
       const now = Date.now();
-      if (now - lastSearchTime < 700) return []; // throttle ~0,7 сек
+      if (now - lastSearchTime < 700) return [];
       lastSearchTime = now;
 
       const url =
@@ -853,16 +833,14 @@
     foodNameInput.addEventListener("input", () => {
       clearTimeout(debounceTimer);
       const q = foodNameInput.value.trim();
-
       if (q.length < 2) {
         clearSuggestions();
         return;
       }
-
       debounceTimer = setTimeout(async () => {
         const results = await searchOFF(q);
         showSuggestions(results);
-      }, 300); // быстрый debounce
+      }, 300);
     });
 
     document.addEventListener("click", e => {
@@ -871,7 +849,7 @@
       }
     });
 
-    /* ========= ПРИЁМЫ ПИЩИ + localStorage ========= */
+    /* Приёмы пищи */
     const mealPopup = document.getElementById("mealPopup");
     let pendingProduct = null;
 
@@ -931,7 +909,7 @@
       }
     });
 
-    /* ========= ИТОГ ДНЯ ========= */
+    /* Итог дня */
     function updateDaySummary() {
       let totalKcal = 0;
       let totalP = 0;
@@ -965,9 +943,7 @@
       if (dailyNorm) {
         const percent = Math.round((totalKcal / dailyNorm) * 100);
         const diff = dailyNorm - totalKcal;
-
         html += `Это ${percent}% от вашей нормы.<br>`;
-
         if (diff >= 0)
           html += `Осталось: <strong>${diff} ккал</strong>`;
         else
@@ -978,7 +954,30 @@
       box.style.display = "block";
     }
 
-    /* ========= СТАРТ ========= */
+    function loadStateFromStorage() {
+      try {
+        const savedNorm = localStorage.getItem(STORAGE_NORM_KEY);
+        if (savedNorm) {
+          const n = Number(savedNorm);
+          if (!isNaN(n)) {
+            dailyNorm = n;
+            normResult.innerHTML =
+              `Ваша ориентировочная норма: <strong>${dailyNorm} ккал</strong> в день.`;
+            normResult.style.display = "block";
+          }
+        }
+        const savedMeals = localStorage.getItem(STORAGE_MEALS_KEY);
+        if (savedMeals) {
+          const parsed = JSON.parse(savedMeals);
+          if (parsed && typeof parsed === "object") {
+            mealsData = Object.assign(mealsData, parsed);
+          }
+        }
+      } catch (e) {}
+      renderMeals();
+      updateDaySummary();
+    }
+
     loadStateFromStorage();
   </script>
 
