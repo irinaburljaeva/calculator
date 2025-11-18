@@ -19,9 +19,7 @@
       --shadow-strong: 0 12px 32px rgba(0,0,0,0.12);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -86,9 +84,8 @@
       padding: 12px;
       z-index: 9999;
     }
-    .modal.active {
-      display: flex;
-    }
+    .modal.active { display: flex; }
+
     .modal__dialog {
       width: 100%;
       max-width: 520px;
@@ -136,9 +133,7 @@
       gap: 4px;
     }
 
-    .field label {
-      font-size: 14px;
-    }
+    .field label { font-size: 14px; }
 
     .field input,
     .field select {
@@ -262,9 +257,7 @@
       margin-top: 18px;
       font-size: 14px;
     }
-    .day-summary strong {
-      color: var(--red);
-    }
+    .day-summary strong { color: var(--red); }
 
     /* Табы внутри калькулятора калорий */
     .cal-tabs {
@@ -310,9 +303,7 @@
       padding: 8px 12px;
       cursor: pointer;
     }
-    .suggestion-item:hover {
-      background: #FFF2E0;
-    }
+    .suggestion-item:hover { background: #FFF2E0; }
 
   </style>
 </head>
@@ -325,7 +316,7 @@
     <div class="menu">
       <button class="menu-card" data-open="modal-bmi">
         <h2>ИМТ</h2>
-        <span>быстро узнать индекс массы</span>
+        <span>быстрая оценка индекса массы</span>
       </button>
 
       <button class="menu-card" data-open="modal-calories">
@@ -335,7 +326,7 @@
     </div>
   </div>
 
-  <!-- ===================== МОДАЛКА ИМТ ===================== -->
+  <!-- ============ МОДАЛКА ИМТ ============ -->
   <div class="modal" id="modal-bmi">
     <div class="modal__dialog">
       <button class="modal__close" data-close>✕</button>
@@ -365,7 +356,7 @@
     </div>
   </div>
 
-  <!-- ===================== МОДАЛКА КАЛОРИЙ / КБЖУ ===================== -->
+  <!-- ============ МОДАЛКА КАЛОРИЙ / КБЖУ ============ -->
   <div class="modal" id="modal-calories">
     <div class="modal__dialog">
       <button class="modal__close" data-close>✕</button>
@@ -379,7 +370,7 @@
           <button class="cal-tab" data-cal-tab="day">Калории за день</button>
         </div>
 
-        <!-- ===== Вкладка 1: НОРМА НА ДЕНЬ ===== -->
+        <!-- ----- Вкладка 1: НОРМА НА ДЕНЬ ----- -->
         <div id="calTab-norm">
           <form id="normForm">
 
@@ -407,20 +398,40 @@
             </div>
 
             <div class="field">
-              <label for="activity">Активность</label>
+              <label for="activity">Пример вашей физической активности</label>
               <select id="activity">
-                <option value="1.2">Сидячий день</option>
-                <option value="1.375">Лёгкие тренировки</option>
-                <option value="1.55" selected>3–5 тренировок в неделю</option>
-                <option value="1.725">Очень активный день</option>
+                <option value="1.2">КФА 1,2 — сидячий день, без тренировок</option>
+                <option value="1.375">КФА 1,375 — тренировки 1–3 раза в неделю</option>
+                <option value="1.55" selected>КФА 1,55 — 3–4 тренировки в неделю</option>
+                <option value="1.7">КФА 1,7 — 5–7 тренировок или активная работа</option>
+                <option value="1.9">КФА 1,9 — очень высокая нагрузка/спорт</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="stepsPerDay">Сколько шагов в день вы проходите в среднем?</label>
+              <input id="stepsPerDay" type="number" min="0" placeholder="Например: 6000">
+            </div>
+
+            <div class="field">
+              <label for="stepMinutes">Сколько минут шагательных тренировок в неделю?</label>
+              <input id="stepMinutes" type="number" min="0" placeholder="Например: 90 (3 тренировки по 30 минут)">
+            </div>
+
+            <div class="field">
+              <label for="hormones">Есть ли диагностированные гормональные нарушения?</label>
+              <select id="hormones">
+                <option value="no" selected>Нет</option>
+                <option value="yes">Да</option>
               </select>
             </div>
 
             <div class="field">
               <label for="goal">Цель</label>
               <select id="goal">
-                <option value="loss">Похудение</option>
-                <option value="maintain">Поддержание</option>
+                <option value="loss500">Похудение — дефицит ~500 ккал/день</option>
+                <option value="loss700">Похудение — дефицит ~700 ккал/день</option>
+                <option value="maintain">Поддержание веса</option>
                 <option value="gain">Набор массы</option>
               </select>
             </div>
@@ -436,7 +447,7 @@
           </form>
         </div>
 
-        <!-- ===== Вкладка 2: КАЛОРИИ ЗА ДЕНЬ ===== -->
+        <!-- ----- Вкладка 2: КАЛОРИИ ЗА ДЕНЬ ----- -->
         <div id="calTab-day" style="display:none;">
 
           <!-- Поля продукта -->
@@ -512,26 +523,24 @@
   </div>
 
   <script>
-    /* ========= ОТКРЫТИЕ / ЗАКРЫТИЕ МОДАЛОК ========= */
+    /* ========= МОДАЛКИ ========= */
     document.querySelectorAll("[data-open]").forEach(btn => {
       btn.addEventListener("click", () => {
         document.getElementById(btn.dataset.open).classList.add("active");
       });
     });
-
     document.querySelectorAll("[data-close]").forEach(btn => {
       btn.addEventListener("click", () => {
         btn.closest(".modal").classList.remove("active");
       });
     });
-
     document.querySelectorAll(".modal").forEach(modal => {
       modal.addEventListener("click", e => {
         if (e.target === modal) modal.classList.remove("active");
       });
     });
 
-    /* ========= ТАБЫ В КАЛЬКУЛЯТОРЕ КАЛОРИЙ ========= */
+    /* ========= ТАБЫ КАЛОРИЙ ========= */
     const calTabs = document.querySelectorAll(".cal-tab");
     function activateCalTab(name) {
       calTabs.forEach(btn => {
@@ -540,12 +549,10 @@
       document.getElementById("calTab-norm").style.display = name === "norm" ? "block" : "none";
       document.getElementById("calTab-day").style.display = name === "day" ? "block" : "none";
     }
-    calTabs.forEach(btn => {
-      btn.addEventListener("click", () => activateCalTab(btn.dataset.calTab));
-    });
+    calTabs.forEach(btn => btn.addEventListener("click", () => activateCalTab(btn.dataset.calTab)));
     activateCalTab("norm");
 
-    /* ========= КАЛЬКУЛЯТОР ИМТ ========= */
+    /* ========= ИМТ ========= */
     const bmiForm = document.getElementById("bmiForm");
     const bmiError = document.getElementById("bmiError");
     const bmiResult = document.getElementById("bmiResult");
@@ -602,6 +609,7 @@
     };
 
     function calcBMR(sex, weight, height, age) {
+      // Формула Миффлина — Сан Жеора
       return sex === "female"
         ? 10 * weight + 6.25 * height - 5 * age - 161
         : 10 * weight + 6.25 * height - 5 * age + 5;
@@ -678,22 +686,81 @@
       const age = Number(document.getElementById("age").value);
       const weight = Number(document.getElementById("weightNorm").value);
       const height = Number(document.getElementById("heightNorm").value);
-      const activity = Number(document.getElementById("activity").value);
+      let activity = Number(document.getElementById("activity").value);
+      const steps = Number(document.getElementById("stepsPerDay").value) || 0;
+      const stepMinutes = Number(document.getElementById("stepMinutes").value) || 0;
+      const hormones = document.getElementById("hormones").value === "yes";
       const goal = document.getElementById("goal").value;
 
       if (!age || !weight || !height) {
-        normError.textContent = "Заполните все поля.";
+        normError.textContent = "Заполните все обязательные поля.";
         normError.style.display = "block";
         return;
       }
 
-      let tdee = calcBMR(sex, weight, height, age) * activity;
-      if (goal === "loss") tdee *= 0.85;
-      else if (goal === "gain") tdee *= 1.15;
+      // Базовый обмен
+      const bmr = calcBMR(sex, weight, height, age);
+
+      // Уточняем КФА по шагам и шагательным тренировкам (мягкая поправка)
+      let kfa = activity;
+      if (steps >= 8000 && steps < 10000) kfa += 0.05;
+      else if (steps >= 10000) kfa += 0.1;
+
+      if (stepMinutes >= 30 && stepMinutes < 60) kfa += 0.05;
+      else if (stepMinutes >= 60) kfa += 0.1;
+
+      if (kfa > 1.9) kfa = 1.9;
+
+      let tdee = bmr * kfa;
+
+      // Мужчинам +100 ккал
+      if (sex === "male") tdee += 100;
+
+      // Цели по дефициту/профициту
+      let deficit = 0;
+      if (goal === "loss500") deficit = 500;
+      else if (goal === "loss700") deficit = 700;
+      else if (goal === "gain") tdee += 200; // лёгкий профицит
+
+      // Если есть гормональные нарушения — делаем дефицит мягче
+      if (deficit > 0) {
+        if (hormones) deficit = Math.round(deficit * 0.8);
+        tdee -= deficit;
+      }
 
       dailyNorm = Math.round(tdee);
-      normResult.innerHTML =
-        `Ваша ориентировочная норма: <strong>${dailyNorm} ккал</strong> в день.`;
+
+      // Эффективный вес по формуле Дёренберга (цель: 10% жира у мужчин, 15% у женщин)
+      const heightM = height / 100;
+      const sexFlag = sex === "male" ? 1 : 0;
+      const targetBF = sex === "male" ? 10 : 15;
+      let bmiTarget = (targetBF + 10.8 * sexFlag + 5.4 - 0.23 * age) / 1.2;
+      if (bmiTarget < 18) bmiTarget = 18; // не уходим в слишком низкий ИМТ
+      const effectiveWeight = Math.round(bmiTarget * heightM * heightM);
+
+      // Макросы (ориентировочно)
+      const proteinG = Math.round(effectiveWeight * 1.6); // г/кг
+      const fatG = Math.round(effectiveWeight * 0.8);
+      let proteinKcal = proteinG * 4;
+      let fatKcal = fatG * 9;
+      let carbsKcal = dailyNorm - proteinKcal - fatKcal;
+      if (carbsKcal < 0) carbsKcal = 0;
+      const carbsG = Math.round(carbsKcal / 4);
+
+      let text = `
+        Ваша ориентировочная норма: <strong>${dailyNorm} ккал</strong> в день.<br><br>
+        Ориентировочное распределение КБЖУ:<br>
+        • Белки: <strong>${proteinG} г</strong> в день<br>
+        • Жиры: <strong>${fatG} г</strong> в день<br>
+        • Углеводы: <strong>${carbsG} г</strong> в день<br><br>
+        Эффективный вес для вашего роста (при ~${sex === "male" ? 10 : 15}% жира): <strong>${effectiveWeight} кг</strong>.
+      `;
+
+      if (hormones) {
+        text += `<br><br>Вы указали, что есть гормональные нарушения — дефицит сделан мягче, чтобы не перегружать организм.`;
+      }
+
+      normResult.innerHTML = text;
       normResult.style.display = "block";
 
       saveNormToStorage();
@@ -717,7 +784,7 @@
 
     async function searchOFF(query) {
       const now = Date.now();
-      if (now - lastSearchTime < 700) return []; // throttle ~0.7 сек
+      if (now - lastSearchTime < 700) return []; // throttle ~0,7 сек
       lastSearchTime = now;
 
       const url =
@@ -795,7 +862,7 @@
       debounceTimer = setTimeout(async () => {
         const results = await searchOFF(q);
         showSuggestions(results);
-      }, 300); // было 600, сделали быстрее
+      }, 300); // быстрый debounce
     });
 
     document.addEventListener("click", e => {
@@ -804,7 +871,7 @@
       }
     });
 
-    /* ========= ДОБАВЛЕНИЕ ПРОДУКТОВ В ПРИЁМЫ ПИЩИ + localStorage ========= */
+    /* ========= ПРИЁМЫ ПИЩИ + localStorage ========= */
     const mealPopup = document.getElementById("mealPopup");
     let pendingProduct = null;
 
@@ -816,9 +883,7 @@
       const f100 = Number(document.getElementById("fat100").value) || 0;
       const c100 = Number(document.getElementById("carb100").value) || 0;
 
-      if (!name || !grams || !kcal100) {
-        return;
-      }
+      if (!name || !grams || !kcal100) return;
 
       pendingProduct = {
         name,
@@ -913,7 +978,7 @@
       box.style.display = "block";
     }
 
-    /* ========= Загрузка состояния при старте ========= */
+    /* ========= СТАРТ ========= */
     loadStateFromStorage();
   </script>
 
