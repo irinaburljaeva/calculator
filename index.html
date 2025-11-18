@@ -99,6 +99,7 @@
       flex-direction: column;
       box-shadow: var(--shadow-strong);
       overflow: hidden;
+      position: relative;
     }
     .modal__head {
       padding: 14px 18px;
@@ -193,29 +194,6 @@
       margin-top: 8px;
     }
 
-    /* Подсказки API под инпутом */
-    .suggestions-box {
-      position: absolute;
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      box-shadow: var(--shadow-soft);
-      padding: 6px 0;
-      display: none;
-      z-index: 99999;
-      max-height: 220px;
-      overflow-y: auto;
-    }
-
-    .suggestion-item {
-      padding: 8px 12px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-    .suggestion-item:hover {
-      background: #FFF2E0;
-    }
-
     /* Карточки продуктов */
     .food-card {
       border: 1px solid #F1F1F1;
@@ -288,6 +266,54 @@
       color: var(--red);
     }
 
+    /* Табы внутри калькулятора калорий */
+    .cal-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 14px;
+      background: #FFF4E0;
+      padding: 4px;
+      border-radius: 14px;
+    }
+    .cal-tab {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-size: 13px;
+      cursor: pointer;
+      color: #666;
+    }
+    .cal-tab-active {
+      background: #fff;
+      box-shadow: var(--shadow-soft);
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    /* Подсказки API под полем продукта */
+    .suggestions-box {
+      position: absolute;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      box-shadow: var(--shadow-soft);
+      padding: 6px 0;
+      display: none;
+      z-index: 99999;
+      max-height: 220px;
+      overflow-y: auto;
+      font-size: 14px;
+    }
+    .suggestion-item {
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+    .suggestion-item:hover {
+      background: #FFF2E0;
+    }
+
   </style>
 </head>
 
@@ -308,6 +334,7 @@
       </button>
     </div>
   </div>
+
   <!-- ===================== МОДАЛКА ИМТ ===================== -->
   <div class="modal" id="modal-bmi">
     <div class="modal__dialog">
@@ -338,74 +365,7 @@
     </div>
   </div>
 
-
-
-  <!-- ===================== МОДАЛКА НОРМЫ КАЛОРИЙ ===================== -->
-  <div class="modal" id="modal-norm">
-    <div class="modal__dialog">
-      <button class="modal__close" data-close>✕</button>
-      <div class="modal__head">Ваша дневная норма калорий</div>
-
-      <div class="modal__body">
-        <form id="normForm">
-
-          <div class="field">
-            <label for="sex">Пол</label>
-            <select id="sex">
-              <option value="female">Женщина</option>
-              <option value="male">Мужчина</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="age">Возраст</label>
-            <input id="age" type="number" min="14" max="90" required>
-          </div>
-
-          <div class="field">
-            <label for="weightNorm">Вес (кг)</label>
-            <input id="weightNorm" type="number" min="30" max="250" step="0.1" required>
-          </div>
-
-          <div class="field">
-            <label for="heightNorm">Рост (см)</label>
-            <input id="heightNorm" type="number" min="120" max="220" required>
-          </div>
-
-          <div class="field">
-            <label for="activity">Активность</label>
-            <select id="activity">
-              <option value="1.2">Сидячий день</option>
-              <option value="1.375">Лёгкие тренировки</option>
-              <option value="1.55" selected>3–5 тренировок в неделю</option>
-              <option value="1.725">Очень активный день</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="goal">Цель</label>
-            <select id="goal">
-              <option value="loss">Похудение</option>
-              <option value="maintain">Поддержание</option>
-              <option value="gain">Набор массы</option>
-            </select>
-          </div>
-
-          <div class="btns">
-            <button type="submit" class="btn btn-red">Рассчитать</button>
-            <button type="button" class="btn btn-gray" id="normReset">Сброс</button>
-          </div>
-
-          <div id="normError" class="error" style="display:none;"></div>
-          <div id="normResult" class="box" style="display:none;"></div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-
-
-  <!-- ===================== МОДАЛКА КАЛЬКУЛЯТОРА КАЛОРИЙ / КБЖУ ===================== -->
+  <!-- ===================== МОДАЛКА КАЛОРИЙ / КБЖУ ===================== -->
   <div class="modal" id="modal-calories">
     <div class="modal__dialog">
       <button class="modal__close" data-close>✕</button>
@@ -413,429 +373,488 @@
 
       <div class="modal__body">
 
-        <!-- ======= Поле поиска продукта ======= -->
-        <div class="field" style="position:relative;">
-          <label for="foodName">Название продукта</label>
-          <input id="foodName" type="text" placeholder="Например: яблоко, гречка…" autocomplete="off">
+        <!-- Табы -->
+        <div class="cal-tabs">
+          <button class="cal-tab cal-tab-active" data-cal-tab="norm">Ваша норма на день</button>
+          <button class="cal-tab" data-cal-tab="day">Калории за день</button>
         </div>
 
-        <!-- Подсказки API -->
-        <div id="suggestions" class="suggestions-box"></div>
+        <!-- ===== Вкладка 1: НОРМА НА ДЕНЬ ===== -->
+        <div id="calTab-norm">
+          <form id="normForm">
 
-        <!-- Калорийность -->
-        <div class="field">
-          <label for="foodPer100">Калории (ккал) на 100 г</label>
-          <input id="foodPer100" type="number" placeholder="Автоподстановка через API">
+            <div class="field">
+              <label for="sex">Пол</label>
+              <select id="sex">
+                <option value="female">Женщина</option>
+                <option value="male">Мужчина</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="age">Возраст</label>
+              <input id="age" type="number" min="14" max="90" required>
+            </div>
+
+            <div class="field">
+              <label for="weightNorm">Вес (кг)</label>
+              <input id="weightNorm" type="number" min="30" max="250" step="0.1" required>
+            </div>
+
+            <div class="field">
+              <label for="heightNorm">Рост (см)</label>
+              <input id="heightNorm" type="number" min="120" max="220" required>
+            </div>
+
+            <div class="field">
+              <label for="activity">Активность</label>
+              <select id="activity">
+                <option value="1.2">Сидячий день</option>
+                <option value="1.375">Лёгкие тренировки</option>
+                <option value="1.55" selected>3–5 тренировок в неделю</option>
+                <option value="1.725">Очень активный день</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="goal">Цель</label>
+              <select id="goal">
+                <option value="loss">Похудение</option>
+                <option value="maintain">Поддержание</option>
+                <option value="gain">Набор массы</option>
+              </select>
+            </div>
+
+            <div class="btns">
+              <button type="submit" class="btn btn-red">Рассчитать</button>
+              <button type="button" class="btn btn-gray" id="normReset">Сброс</button>
+            </div>
+
+            <div id="normError" class="error" style="display:none;"></div>
+            <div id="normResult" class="box" style="display:none;"></div>
+
+          </form>
         </div>
 
-        <!-- Граммы -->
-        <div class="field">
-          <label for="foodGrams">Сколько граммов вы съели?</label>
-          <input id="foodGrams" type="number" min="1" placeholder="Например: 120">
+        <!-- ===== Вкладка 2: КАЛОРИИ ЗА ДЕНЬ ===== -->
+        <div id="calTab-day" style="display:none;">
+
+          <!-- Поля продукта -->
+          <div class="field" style="position:relative;">
+            <label for="foodName">Название продукта</label>
+            <input id="foodName" type="text" placeholder="Например: яблоко, гречка…" autocomplete="off">
+          </div>
+
+          <p style="font-size:13px; color:#777; margin-top:-6px; margin-bottom:8px;">
+            ℹ️ Подсказки могут появляться на разных языках, потому что мы используем международную базу продуктов OpenFoodFacts.
+            Если вашего варианта нет в списке — введите его вручную.
+          </p>
+
+          <div id="suggestions" class="suggestions-box"></div>
+
+          <div class="field">
+            <label for="foodPer100">Калории (ккал) на 100 г</label>
+            <input id="foodPer100" type="number" placeholder="Автоподстановка через базу или введите вручную">
+          </div>
+
+          <div class="field">
+            <label for="foodGrams">Сколько граммов вы съели?</label>
+            <input id="foodGrams" type="number" min="1" placeholder="Например: 120">
+          </div>
+
+          <div class="field">
+            <label>Белки, жиры, углеводы (на 100 г)</label>
+            <input id="protein100" type="number" placeholder="Б, г — автоподстановка или вручную">
+            <input id="fat100" type="number" placeholder="Ж, г — автоподстановка или вручную">
+            <input id="carb100" type="number" placeholder="У, г — автоподстановка или вручную">
+          </div>
+
+          <div class="btns">
+            <button type="button" id="calcFood" class="btn btn-red">Добавить</button>
+            <button type="button" id="clearDay" class="btn btn-gray">Очистить день</button>
+          </div>
+
+          <!-- Всплывающее меню выбора приёма пищи -->
+          <div id="mealPopup" class="meal-popup">
+            <button data-meal="breakfast">Добавить в Завтрак</button>
+            <button data-meal="lunch">Добавить в Обед</button>
+            <button data-meal="dinner">Добавить в Ужин</button>
+            <button data-meal="snack">Добавить в Перекус</button>
+          </div>
+
+          <!-- Приёмы пищи -->
+          <div class="meal-block" id="block-breakfast">
+            <div class="meal-title">Завтрак</div>
+            <div id="list-breakfast"></div>
+          </div>
+
+          <div class="meal-block" id="block-lunch">
+            <div class="meal-title">Обед</div>
+            <div id="list-lunch"></div>
+          </div>
+
+          <div class="meal-block" id="block-dinner">
+            <div class="meal-title">Ужин</div>
+            <div id="list-dinner"></div>
+          </div>
+
+          <div class="meal-block" id="block-snack">
+            <div class="meal-title">Перекус</div>
+            <div id="list-snack"></div>
+          </div>
+
+          <!-- Итог дня -->
+          <div id="daySummary" class="day-summary" style="display:none;"></div>
         </div>
-
-        <!-- БЖУ -->
-        <div class="field">
-          <label>Белки, жиры, углеводы (на 100 г)</label>
-          <input id="protein100" type="number" placeholder="Б, г — автоподстановка">
-          <input id="fat100" type="number" placeholder="Ж, г — автоподстановка">
-          <input id="carb100" type="number" placeholder="У, г — автоподстановка">
-        </div>
-
-        <!-- Кнопка рассчитать -->
-        <div class="btns">
-          <button type="button" id="calcFood" class="btn btn-red">Добавить</button>
-          <button type="button" id="clearDay" class="btn btn-gray">Очистить день</button>
-        </div>
-
-        <!-- Всплывающая панель выбора приёма пищи -->
-        <div id="mealPopup" class="meal-popup">
-          <button data-meal="breakfast">Добавить в Завтрак</button>
-          <button data-meal="lunch">Добавить в Обед</button>
-          <button data-meal="dinner">Добавить в Ужин</button>
-          <button data-meal="snack">Добавить в Перекус</button>
-        </div>
-
-
-        <!-- ======= Блоки приёмов пищи ======= -->
-
-        <div class="meal-block" id="block-breakfast">
-          <div class="meal-title">Завтрак</div>
-          <div id="list-breakfast"></div>
-        </div>
-
-        <div class="meal-block" id="block-lunch">
-          <div class="meal-title">Обед</div>
-          <div id="list-lunch"></div>
-        </div>
-
-        <div class="meal-block" id="block-dinner">
-          <div class="meal-title">Ужин</div>
-          <div id="list-dinner"></div>
-        </div>
-
-        <div class="meal-block" id="block-snack">
-          <div class="meal-title">Перекус</div>
-          <div id="list-snack"></div>
-        </div>
-
-
-        <!-- Итоги дня -->
-        <div id="daySummary" class="day-summary" style="display:none;"></div>
 
       </div>
     </div>
-            </div>
-            <script>
-/* ============================================================
-   ОТКРЫТИЕ / ЗАКРЫТИЕ МОДАЛОК
-============================================================ */
-document.querySelectorAll("[data-open]").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.getElementById(btn.dataset.open).classList.add("active");
-  });
-});
+  </div>
 
-document.querySelectorAll("[data-close]").forEach(btn => {
-  btn.addEventListener("click", () => {
-    btn.closest(".modal").classList.remove("active");
-  });
-});
+  <script>
+    /* ========= ОТКРЫТИЕ / ЗАКРЫТИЕ МОДАЛОК ========= */
+    document.querySelectorAll("[data-open]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.getElementById(btn.dataset.open).classList.add("active");
+      });
+    });
 
-document.querySelectorAll(".modal").forEach(modal => {
-  modal.addEventListener("click", e => {
-    if (e.target === modal) modal.classList.remove("active");
-  });
-});
+    document.querySelectorAll("[data-close]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        btn.closest(".modal").classList.remove("active");
+      });
+    });
 
+    document.querySelectorAll(".modal").forEach(modal => {
+      modal.addEventListener("click", e => {
+        if (e.target === modal) modal.classList.remove("active");
+      });
+    });
 
-/* ============================================================
-   КАЛЬКУЛЯТОР ИМТ
-============================================================ */
-const bmiForm = document.getElementById("bmiForm");
-const bmiError = document.getElementById("bmiError");
-const bmiResult = document.getElementById("bmiResult");
-const bmiReset = document.getElementById("bmiReset");
+    /* ========= ТАБЫ В КАЛЬКУЛЯТОРЕ КАЛОРИЙ ========= */
+    const calTabs = document.querySelectorAll(".cal-tab");
+    function activateCalTab(name) {
+      calTabs.forEach(btn => {
+        btn.classList.toggle("cal-tab-active", btn.dataset.calTab === name);
+      });
+      document.getElementById("calTab-norm").style.display = name === "norm" ? "block" : "none";
+      document.getElementById("calTab-day").style.display = name === "day" ? "block" : "none";
+    }
+    calTabs.forEach(btn => {
+      btn.addEventListener("click", () => activateCalTab(btn.dataset.calTab));
+    });
+    activateCalTab("norm");
 
-function bmiStatus(bmi) {
-  if (bmi <= 16) return "выраженный дефицит массы";
-  if (bmi < 18.5) return "недостаточная масса тела";
-  if (bmi < 25) return "норма";
-  if (bmi < 30) return "избыточная масса (предожирение)";
-  if (bmi < 35) return "ожирение";
-  if (bmi < 40) return "резкое ожирение";
-  return "очень резкое ожирение";
-}
+    /* ========= КАЛЬКУЛЯТОР ИМТ ========= */
+    const bmiForm = document.getElementById("bmiForm");
+    const bmiError = document.getElementById("bmiError");
+    const bmiResult = document.getElementById("bmiResult");
 
-bmiForm.addEventListener("submit", e => {
-  e.preventDefault();
-  bmiError.style.display = "none";
-  bmiResult.style.display = "none";
+    function bmiStatus(bmi) {
+      if (bmi <= 16) return "выраженный дефицит массы";
+      if (bmi < 18.5) return "недостаточная масса тела";
+      if (bmi < 25) return "норма";
+      if (bmi < 30) return "избыточная масса (предожирение)";
+      if (bmi < 35) return "ожирение";
+      if (bmi < 40) return "резкое ожирение";
+      return "очень резкое ожирение";
+    }
 
-  const w = parseFloat(document.getElementById("bmiWeight").value);
-  const h = parseFloat(document.getElementById("bmiHeight").value) / 100;
+    bmiForm.addEventListener("submit", e => {
+      e.preventDefault();
+      bmiError.style.display = "none";
+      bmiResult.style.display = "none";
 
-  if (!w || !h || w <= 0 || h <= 0) {
-    bmiError.textContent = "Проверьте введённые значения.";
-    bmiError.style.display = "block";
-    return;
-  }
+      const w = parseFloat(document.getElementById("bmiWeight").value);
+      const h = parseFloat(document.getElementById("bmiHeight").value) / 100;
 
-  const bmi = w / (h * h);
-  bmiResult.innerHTML = `Ваш ИМТ: <strong>${bmi.toFixed(1)}</strong> — ${bmiStatus(bmi)}.`;
-  bmiResult.style.display = "block";
-});
+      if (!w || !h || w <= 0 || h <= 0) {
+        bmiError.textContent = "Проверьте введённые значения.";
+        bmiError.style.display = "block";
+        return;
+      }
 
-bmiReset.addEventListener("click", () => {
-  bmiForm.reset();
-  bmiError.style.display = "none";
-  bmiResult.style.display = "none";
-});
+      const bmi = w / (h * h);
+      bmiResult.innerHTML = `Ваш ИМТ: <strong>${bmi.toFixed(1)}</strong> — ${bmiStatus(bmi)}.`;
+      bmiResult.style.display = "block";
+    });
 
+    document.getElementById("bmiReset").addEventListener("click", () => {
+      bmiForm.reset();
+      bmiError.style.display = "none";
+      bmiResult.style.display = "none";
+    });
 
-/* ============================================================
-   КАЛЬКУЛЯТОР НОРМЫ КАЛОРИЙ
-============================================================ */
-let dailyNorm = null;
+    /* ========= НОРМА КАЛОРИЙ ========= */
+    let dailyNorm = null;
+    const normForm = document.getElementById("normForm");
+    const normError = document.getElementById("normError");
+    const normResult = document.getElementById("normResult");
 
-const normForm = document.getElementById("normForm");
-const normError = document.getElementById("normError");
-const normResult = document.getElementById("normResult");
+    function calcBMR(sex, weight, height, age) {
+      return sex === "female"
+        ? 10 * weight + 6.25 * height - 5 * age - 161
+        : 10 * weight + 6.25 * height - 5 * age + 5;
+    }
 
-function calcBMR(sex, weight, height, age) {
-  return sex === "female"
-    ? 10 * weight + 6.25 * height - 5 * age - 161
-    : 10 * weight + 6.25 * height - 5 * age + 5;
-}
+    normForm.addEventListener("submit", e => {
+      e.preventDefault();
+      normError.style.display = "none";
+      normResult.style.display = "none";
 
-normForm.addEventListener("submit", e => {
-  e.preventDefault();
+      const sex = document.getElementById("sex").value;
+      const age = Number(document.getElementById("age").value);
+      const weight = Number(document.getElementById("weightNorm").value);
+      const height = Number(document.getElementById("heightNorm").value);
+      const activity = Number(document.getElementById("activity").value);
+      const goal = document.getElementById("goal").value;
 
-  normError.style.display = "none";
-  normResult.style.display = "none";
+      if (!age || !weight || !height) {
+        normError.textContent = "Заполните все поля.";
+        normError.style.display = "block";
+        return;
+      }
 
-  const sex = document.getElementById("sex").value;
-  const age = Number(document.getElementById("age").value);
-  const weight = Number(document.getElementById("weightNorm").value);
-  const height = Number(document.getElementById("heightNorm").value);
-  const activity = Number(document.getElementById("activity").value);
-  const goal = document.getElementById("goal").value;
+      let tdee = calcBMR(sex, weight, height, age) * activity;
+      if (goal === "loss") tdee *= 0.85;
+      else if (goal === "gain") tdee *= 1.15;
 
-  if (!age || !weight || !height) {
-    normError.textContent = "Заполните все поля.";
-    normError.style.display = "block";
-    return;
-  }
+      dailyNorm = Math.round(tdee);
+      normResult.innerHTML = `Ваша ориентировочная норма: <strong>${dailyNorm} ккал</strong> в день.`;
+      normResult.style.display = "block";
 
-  let tdee = calcBMR(sex, weight, height, age) * activity;
+      updateDaySummary();
+    });
 
-  if (goal === "loss") tdee *= 0.85;
-  else if (goal === "gain") tdee *= 1.15;
+    document.getElementById("normReset").addEventListener("click", () => {
+      normForm.reset();
+      normError.style.display = "none";
+      normResult.style.display = "none";
+      dailyNorm = null;
+      updateDaySummary();
+    });
 
-  dailyNorm = Math.round(tdee);
+    /* ========= API OPENFOODFACTS (подсказки) ========= */
+    const foodNameInput = document.getElementById("foodName");
+    const suggestionsBox = document.getElementById("suggestions");
+    let lastSearchTime = 0;
+    let debounceTimer = null;
 
-  normResult.innerHTML =
-    `Ваша ориентировочная норма: <strong>${dailyNorm} ккал</strong> в день.`;
+    async function searchOFF(query) {
+      const now = Date.now();
+      if (now - lastSearchTime < 1000) return []; // throttle 1 запрос/сек
+      lastSearchTime = now;
 
-  normResult.style.display = "block";
+      const url =
+        "https://world.openfoodfacts.org/cgi/search.pl?" +
+        "search_terms=" + encodeURIComponent(query) +
+        "&search_simple=1&action=process" +
+        "&fields=product_name,product_name_ru,nutriments" +
+        "&json=1";
 
-  updateDaySummary();
-});
+      try {
+        const res = await fetch(url, {
+          headers: {
+            "User-Agent": "ShagayDomaCalc/1.0 (ira-burljaeva@rambler.ru)"
+          }
+        });
+        const data = await res.json();
+        return data.products || [];
+      } catch (e) {
+        return [];
+      }
+    }
 
-document.getElementById("normReset").addEventListener("click", () => {
-  normForm.reset();
-  normError.style.display = "none";
-  normResult.style.display = "none";
-  dailyNorm = null;
-  updateDaySummary();
-});
+    function clearSuggestions() {
+      suggestionsBox.style.display = "none";
+      suggestionsBox.innerHTML = "";
+    }
 
+    function showSuggestions(items) {
+      suggestionsBox.innerHTML = "";
+      if (!items.length) {
+        suggestionsBox.style.display = "none";
+        return;
+      }
 
-/* ============================================================
-   API OPENFOODFACTS — ПОИСК ПРОДУКТОВ
-============================================================ */
-const foodNameInput = document.getElementById("foodName");
-const suggestionsBox = document.getElementById("suggestions");
+      const rect = foodNameInput.getBoundingClientRect();
+      suggestionsBox.style.top = rect.bottom + window.scrollY + "px";
+      suggestionsBox.style.left = rect.left + "px";
+      suggestionsBox.style.width = rect.width + "px";
 
-let lastSearchTime = 0; // throttle
-let debounceTimer = null;
+      items.slice(0, 10).forEach(item => {
+        const name = item.product_name_ru || item.product_name || "";
+        const n = item.nutriments || {};
+        const kcal = n["energy-kcal_100g"];
 
-async function searchOFF(query) {
-  const now = Date.now();
-  if (now - lastSearchTime < 1000) return []; // throttle
-  lastSearchTime = now;
+        if (!name || !kcal) return;
 
-  const url =
-    "https://world.openfoodfacts.org/cgi/search.pl?" +
-    "search_terms=" + encodeURIComponent(query) +
-    "&search_simple=1&action=process" +
-    "&fields=product_name,nutriments" +
-    "&json=1";
+        const d = document.createElement("div");
+        d.className = "suggestion-item";
+        d.textContent = `${name} — ${kcal} ккал`;
 
-  try {
-    const res = await fetch(url, {
-      headers: {
-        "User-Agent": "ShagayDomaCalc/1.0 (ira-burljaeva@rambler.ru)"
+        d.addEventListener("click", () => {
+          document.getElementById("foodName").value = name;
+          document.getElementById("foodPer100").value = kcal;
+          document.getElementById("protein100").value = n.proteins_100g || 0;
+          document.getElementById("fat100").value = n.fat_100g || 0;
+          document.getElementById("carb100").value = n.carbohydrates_100g || 0;
+          clearSuggestions();
+        });
+
+        suggestionsBox.appendChild(d);
+      });
+
+      suggestionsBox.style.display = "block";
+    }
+
+    foodNameInput.addEventListener("input", () => {
+      clearTimeout(debounceTimer);
+      const q = foodNameInput.value.trim();
+
+      if (q.length < 2) {
+        clearSuggestions();
+        return;
+      }
+
+      debounceTimer = setTimeout(async () => {
+        const results = await searchOFF(q);
+        showSuggestions(results);
+      }, 600);
+    });
+
+    document.addEventListener("click", e => {
+      if (!suggestionsBox.contains(e.target) && e.target !== foodNameInput) {
+        clearSuggestions();
       }
     });
-    const data = await res.json();
-    return data.products || [];
-  } catch (e) {
-    return [];
-  }
-}
 
-function clearSuggestions() {
-  suggestionsBox.style.display = "none";
-  suggestionsBox.innerHTML = "";
-}
+    /* ========= ДОБАВЛЕНИЕ ПРОДУКТОВ В ПРИЁМЫ ПИЩИ ========= */
+    const mealPopup = document.getElementById("mealPopup");
+    let pendingProduct = null;
 
-function showSuggestions(items) {
-  suggestionsBox.innerHTML = "";
-  if (!items.length) {
-    suggestionsBox.style.display = "none";
-    return;
-  }
+    document.getElementById("calcFood").addEventListener("click", () => {
+      const name = document.getElementById("foodName").value.trim();
+      const grams = Number(document.getElementById("foodGrams").value);
+      const kcal100 = Number(document.getElementById("foodPer100").value);
+      const p100 = Number(document.getElementById("protein100").value) || 0;
+      const f100 = Number(document.getElementById("fat100").value) || 0;
+      const c100 = Number(document.getElementById("carb100").value) || 0;
 
-  suggestionsBox.style.display = "block";
+      if (!name || !grams || !kcal100) {
+        return;
+      }
 
-  const rect = foodNameInput.getBoundingClientRect();
-  suggestionsBox.style.top = rect.bottom + window.scrollY + "px";
-  suggestionsBox.style.left = rect.left + "px";
-  suggestionsBox.style.width = rect.width + "px";
+      pendingProduct = {
+        name,
+        grams,
+        kcal: Math.round(kcal100 * grams / 100),
+        p: +(p100 * grams / 100).toFixed(1),
+        f: +(f100 * grams / 100).toFixed(1),
+        c: +(c100 * grams / 100).toFixed(1)
+      };
 
-  items.slice(0, 10).forEach(item => {
-    const name = item.product_name;
-    const n = item.nutriments || {};
-    const kcal = n["energy-kcal_100g"];
-
-    if (!name || !kcal) return;
-
-    const d = document.createElement("div");
-    d.className = "suggestion-item";
-    d.textContent = `${name} — ${kcal} ккал`;
-
-    d.addEventListener("click", () => {
-      foodNameInput.value = name;
-      document.getElementById("foodPer100").value = kcal;
-      document.getElementById("protein100").value = n.proteins_100g || 0;
-      document.getElementById("fat100").value = n.fat_100g || 0;
-      document.getElementById("carb100").value = n.carbohydrates_100g || 0;
-
-      clearSuggestions();
+      const rect = document.getElementById("calcFood").getBoundingClientRect();
+      mealPopup.style.top = rect.bottom + window.scrollY + "px";
+      mealPopup.style.left = rect.left + "px";
+      mealPopup.style.display = "block";
     });
 
-    suggestionsBox.appendChild(d);
-  });
-}
-
-foodNameInput.addEventListener("input", () => {
-  clearTimeout(debounceTimer);
-  const q = foodNameInput.value.trim();
-
-  if (q.length < 2) {
-    clearSuggestions();
-    return;
-  }
-
-  debounceTimer = setTimeout(async () => {
-    const results = await searchOFF(q);
-    showSuggestions(results);
-  }, 600);
-});
-
-document.addEventListener("click", e => {
-  if (!suggestionsBox.contains(e.target) && e.target !== foodNameInput) {
-    clearSuggestions();
-  }
-});
-
-
-/* ============================================================
-   ДОБАВЛЕНИЕ ПРОДУКТОВ → 4 ПРИЁМА ПИЩИ
-============================================================ */
-const mealPopup = document.getElementById("mealPopup");
-
-let pendingProduct = null;
-
-document.getElementById("calcFood").addEventListener("click", () => {
-  const name = foodNameInput.value.trim();
-  const grams = Number(document.getElementById("foodGrams").value);
-  const kcal100 = Number(document.getElementById("foodPer100").value);
-
-  const p = Number(document.getElementById("protein100").value);
-  const f = Number(document.getElementById("fat100").value);
-  const c = Number(document.getElementById("carb100").value);
-
-  if (!name || !grams || !kcal100) return;
-
-  pendingProduct = {
-    name,
-    grams,
-    kcal: Math.round(kcal100 * grams / 100),
-    p: +(p * grams / 100).toFixed(1),
-    f: +(f * grams / 100).toFixed(1),
-    c: +(c * grams / 100).toFixed(1)
-  };
-
-  const rect = document.getElementById("calcFood").getBoundingClientRect();
-  mealPopup.style.top = rect.bottom + window.scrollY + "px";
-  mealPopup.style.left = rect.left + "px";
-  mealPopup.style.display = "block";
-});
-
-document.getElementById("clearDay").addEventListener("click", () => {
-  ["breakfast", "lunch", "dinner", "snack"].forEach(meal => {
-    document.getElementById("list-" + meal).innerHTML = "";
-  });
-  updateDaySummary();
-});
-
-mealPopup.querySelectorAll("button").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const meal = btn.dataset.meal;
-    addToMeal(meal, pendingProduct);
-    mealPopup.style.display = "none";
-    updateDaySummary();
-  });
-});
-
-function addToMeal(meal, product) {
-  if (!product) return;
-  const container = document.getElementById("list-" + meal);
-
-  const div = document.createElement("div");
-  div.className = "food-card";
-  div.innerHTML = `
-    <div class="food-card-title">${product.name} • ${product.grams} г</div>
-    <div class="food-card-details">
-      Калории: <strong>${product.kcal}</strong><br>
-      Б: ${product.p} г |
-      Ж: ${product.f} г |
-      У: ${product.c} г
-    </div>
-  `;
-
-  container.appendChild(div);
-}
-
-
-/* ============================================================
-   ИТОГ ДНЯ
-============================================================ */
-function updateDaySummary() {
-  let totalKcal = 0;
-  let totalP = 0;
-  let totalF = 0;
-  let totalC = 0;
-
-  ["breakfast", "lunch", "dinner", "snack"].forEach(meal => {
-    const cards = document.querySelectorAll("#list-" + meal + " .food-card");
-    cards.forEach(card => {
-      const text = card.querySelector(".food-card-details").innerHTML;
-      const kcal = Number(text.match(/Калории: <strong>(\d+)/)?.[1] || 0);
-      const p = Number(text.match(/Б: ([\d.]+)/)?.[1] || 0);
-      const f = Number(text.match(/Ж: ([\d.]+)/)?.[1] || 0);
-      const c = Number(text.match(/У: ([\d.]+)/)?.[1] || 0);
-
-      totalKcal += kcal;
-      totalP += p;
-      totalF += f;
-      totalC += c;
+    document.getElementById("clearDay").addEventListener("click", () => {
+      ["breakfast", "lunch", "dinner", "snack"].forEach(meal => {
+        document.getElementById("list-" + meal).innerHTML = "";
+      });
+      updateDaySummary();
     });
-  });
 
-  const box = document.getElementById("daySummary");
+    mealPopup.querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const meal = btn.dataset.meal;
+        addToMeal(meal, pendingProduct);
+        mealPopup.style.display = "none";
+        updateDaySummary();
+      });
+    });
 
-  if (totalKcal === 0) {
-    box.style.display = "none";
-    return;
-  }
+    document.addEventListener("click", e => {
+      if (!mealPopup.contains(e.target) && e.target.id !== "calcFood") {
+        mealPopup.style.display = "none";
+      }
+    });
 
-  let html = `
-    <strong>Итог за день:</strong><br>
-    Калории: <strong>${totalKcal}</strong><br>
-    Белки: ${totalP.toFixed(1)} г<br>
-    Жиры: ${totalF.toFixed(1)} г<br>
-    Углеводы: ${totalC.toFixed(1)} г<br><br>
-  `;
+    function addToMeal(meal, product) {
+      if (!product) return;
+      const container = document.getElementById("list-" + meal);
 
-  if (dailyNorm) {
-    const percent = Math.round((totalKcal / dailyNorm) * 100);
-    const diff = dailyNorm - totalKcal;
+      const div = document.createElement("div");
+      div.className = "food-card";
+      div.innerHTML = `
+        <div class="food-card-title">${product.name} • ${product.grams} г</div>
+        <div class="food-card-details">
+          Калории: <strong>${product.kcal}</strong><br>
+          Б: ${product.p} г |
+          Ж: ${product.f} г |
+          У: ${product.c} г
+        </div>
+      `;
 
-    html += `Это ${percent}% от вашей нормы.<br>`;
+      container.appendChild(div);
+    }
 
-    if (diff >= 0)
-      html += `Осталось: <strong>${diff} ккал</strong>`;
-    else
-      html += `Перебор: <strong>${Math.abs(diff)} ккал</strong>`;
-  }
+    /* ========= ИТОГ ДНЯ ========= */
+    function updateDaySummary() {
+      let totalKcal = 0;
+      let totalP = 0;
+      let totalF = 0;
+      let totalC = 0;
 
-  box.innerHTML = html;
-  box.style.display = "block";
-}
-</script>
+      ["breakfast", "lunch", "dinner", "snack"].forEach(meal => {
+        const cards = document.querySelectorAll("#list-" + meal + " .food-card");
+        cards.forEach(card => {
+          const text = card.querySelector(".food-card-details").innerHTML;
+          const kcal = Number(text.match(/Калории: <strong>(\d+)/)?.[1] || 0);
+          const p = Number(text.match(/Б: ([\d.]+)/)?.[1] || 0);
+          const f = Number(text.match(/Ж: ([\d.]+)/)?.[1] || 0);
+          const c = Number(text.match(/У: ([\d.]+)/)?.[1] || 0);
+
+          totalKcal += kcal;
+          totalP += p;
+          totalF += f;
+          totalC += c;
+        });
+      });
+
+      const box = document.getElementById("daySummary");
+
+      if (totalKcal === 0) {
+        box.style.display = "none";
+        return;
+      }
+
+      let html = `
+        <strong>Итог за день:</strong><br>
+        Калории: <strong>${totalKcal}</strong><br>
+        Белки: ${totalP.toFixed(1)} г<br>
+        Жиры: ${totalF.toFixed(1)} г<br>
+        Углеводы: ${totalC.toFixed(1)} г<br><br>
+      `;
+
+      if (dailyNorm) {
+        const percent = Math.round((totalKcal / dailyNorm) * 100);
+        const diff = dailyNorm - totalKcal;
+
+        html += `Это ${percent}% от вашей нормы.<br>`;
+
+        if (diff >= 0)
+          html += `Осталось: <strong>${diff} ккал</strong>`;
+        else
+          html += `Перебор: <strong>${Math.abs(diff)} ккал</strong>`;
+      }
+
+      box.innerHTML = html;
+      box.style.display = "block";
+    }
+  </script>
 
 </body>
 </html>
