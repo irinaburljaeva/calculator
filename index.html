@@ -585,16 +585,88 @@
       bmiResult.style.display = "none";
     });
 
-    /* ========= НОРМА КАЛОРИЙ ========= */
+    /* ========= НОРМА КАЛОРИЙ + localStorage ========= */
     let dailyNorm = null;
     const normForm = document.getElementById("normForm");
     const normError = document.getElementById("normError");
     const normResult = document.getElementById("normResult");
 
+    const STORAGE_NORM_KEY = "sd_daily_norm_v1";
+    const STORAGE_MEALS_KEY = "sd_meals_v1";
+
+    let mealsData = {
+      breakfast: [],
+      lunch: [],
+      dinner: [],
+      snack: []
+    };
+
     function calcBMR(sex, weight, height, age) {
       return sex === "female"
         ? 10 * weight + 6.25 * height - 5 * age - 161
         : 10 * weight + 6.25 * height - 5 * age + 5;
+    }
+
+    function saveNormToStorage() {
+      try {
+        if (dailyNorm != null) {
+          localStorage.setItem(STORAGE_NORM_KEY, String(dailyNorm));
+        } else {
+          localStorage.removeItem(STORAGE_NORM_KEY);
+        }
+      } catch (e) {}
+    }
+
+    function saveMealsToStorage() {
+      try {
+        localStorage.setItem(STORAGE_MEALS_KEY, JSON.stringify(mealsData));
+      } catch (e) {}
+    }
+
+    function renderMeals() {
+      ["breakfast", "lunch", "dinner", "snack"].forEach(meal => {
+        const container = document.getElementById("list-" + meal);
+        if (!container) return;
+        container.innerHTML = "";
+        mealsData[meal].forEach(product => {
+          const div = document.createElement("div");
+          div.className = "food-card";
+          div.innerHTML = `
+            <div class="food-card-title">${product.name} • ${product.grams} г</div>
+            <div class="food-card-details">
+              Калории: <strong>${product.kcal}</strong><br>
+              Б: ${product.p} г |
+              Ж: ${product.f} г |
+              У: ${product.c} г
+            </div>
+          `;
+          container.appendChild(div);
+        });
+      });
+    }
+
+    function loadStateFromStorage() {
+      try {
+        const savedNorm = localStorage.getItem(STORAGE_NORM_KEY);
+        if (savedNorm) {
+          const n = Number(savedNorm);
+          if (!isNaN(n)) {
+            dailyNorm = n;
+            normResult.innerHTML =
+              `Ваша ориентировочная норма: <strong>${dailyNorm} ккал</strong> в день.`;
+            normResult.style.display = "block";
+          }
+        }
+        const savedMeals = localStorage.getItem(STORAGE_MEALS_KEY);
+        if (savedMeals) {
+          const parsed = JSON.parse(savedMeals);
+          if (parsed && typeof parsed === "object") {
+            mealsData = Object.assign(mealsData, parsed);
+          }
+        }
+      } catch (e) {}
+      renderMeals();
+      updateDaySummary();
     }
 
     normForm.addEventListener("submit", e => {
@@ -620,9 +692,11 @@
       else if (goal === "gain") tdee *= 1.15;
 
       dailyNorm = Math.round(tdee);
-      normResult.innerHTML = `Ваша ориентировочная норма: <strong>${dailyNorm} ккал</strong> в день.`;
+      normResult.innerHTML =
+        `Ваша ориентировочная норма: <strong>${dailyNorm} ккал</strong> в день.`;
       normResult.style.display = "block";
 
+      saveNormToStorage();
       updateDaySummary();
     });
 
@@ -631,6 +705,7 @@
       normError.style.display = "none";
       normResult.style.display = "none";
       dailyNorm = null;
+      saveNormToStorage();
       updateDaySummary();
     });
 
@@ -642,7 +717,7 @@
 
     async function searchOFF(query) {
       const now = Date.now();
-      if (now - lastSearchTime < 1000) return []; // throttle 1 запрос/сек
+      if (now - lastSearchTime < 700) return []; // throttle ~0.7 сек
       lastSearchTime = now;
 
       const url =
@@ -720,7 +795,7 @@
       debounceTimer = setTimeout(async () => {
         const results = await searchOFF(q);
         showSuggestions(results);
-      }, 600);
+      }, 300); // было 600, сделали быстрее
     });
 
     document.addEventListener("click", e => {
@@ -729,7 +804,7 @@
       }
     });
 
-    /* ========= ДОБАВЛЕНИЕ ПРОДУКТОВ В ПРИЁМЫ ПИЩИ ========= */
+    /* ========= ДОБАВЛЕНИЕ ПРОДУКТОВ В ПРИЁМЫ ПИЩИ + localStorage ========= */
     const mealPopup = document.getElementById("mealPopup");
     let pendingProduct = null;
 
@@ -761,17 +836,26 @@
     });
 
     document.getElementById("clearDay").addEventListener("click", () => {
-      ["breakfast", "lunch", "dinner", "snack"].forEach(meal => {
-        document.getElementById("list-" + meal).innerHTML = "";
-      });
+      mealsData = {
+        breakfast: [],
+        lunch: [],
+        dinner: [],
+        snack: []
+      };
+      saveMealsToStorage();
+      renderMeals();
       updateDaySummary();
     });
 
     mealPopup.querySelectorAll("button").forEach(btn => {
       btn.addEventListener("click", () => {
         const meal = btn.dataset.meal;
-        addToMeal(meal, pendingProduct);
+        if (!pendingProduct) return;
+        mealsData[meal].push(pendingProduct);
+        pendingProduct = null;
         mealPopup.style.display = "none";
+        saveMealsToStorage();
+        renderMeals();
         updateDaySummary();
       });
     });
@@ -782,25 +866,6 @@
       }
     });
 
-    function addToMeal(meal, product) {
-      if (!product) return;
-      const container = document.getElementById("list-" + meal);
-
-      const div = document.createElement("div");
-      div.className = "food-card";
-      div.innerHTML = `
-        <div class="food-card-title">${product.name} • ${product.grams} г</div>
-        <div class="food-card-details">
-          Калории: <strong>${product.kcal}</strong><br>
-          Б: ${product.p} г |
-          Ж: ${product.f} г |
-          У: ${product.c} г
-        </div>
-      `;
-
-      container.appendChild(div);
-    }
-
     /* ========= ИТОГ ДНЯ ========= */
     function updateDaySummary() {
       let totalKcal = 0;
@@ -809,18 +874,11 @@
       let totalC = 0;
 
       ["breakfast", "lunch", "dinner", "snack"].forEach(meal => {
-        const cards = document.querySelectorAll("#list-" + meal + " .food-card");
-        cards.forEach(card => {
-          const text = card.querySelector(".food-card-details").innerHTML;
-          const kcal = Number(text.match(/Калории: <strong>(\d+)/)?.[1] || 0);
-          const p = Number(text.match(/Б: ([\d.]+)/)?.[1] || 0);
-          const f = Number(text.match(/Ж: ([\d.]+)/)?.[1] || 0);
-          const c = Number(text.match(/У: ([\d.]+)/)?.[1] || 0);
-
-          totalKcal += kcal;
-          totalP += p;
-          totalF += f;
-          totalC += c;
+        mealsData[meal].forEach(p => {
+          totalKcal += p.kcal;
+          totalP += p.p;
+          totalF += p.f;
+          totalC += p.c;
         });
       });
 
@@ -854,6 +912,9 @@
       box.innerHTML = html;
       box.style.display = "block";
     }
+
+    /* ========= Загрузка состояния при старте ========= */
+    loadStateFromStorage();
   </script>
 
 </body>
