@@ -667,7 +667,7 @@
       const age = Number(document.getElementById("age").value);
       const weight = Number(document.getElementById("weightNorm").value);
       const height = Number(document.getElementById("heightNorm").value);
-      let activity = Number(document.getElementById("activity").value);
+      const activity = Number(document.getElementById("activity").value);
       const steps = Number(document.getElementById("stepsPerDay").value) || 0;
       const stepMinutesDay = Number(document.getElementById("stepMinutesDay").value) || 0;
       const hormones = document.getElementById("hormones").value === "yes";
@@ -681,29 +681,37 @@
 
       const bmr = calcBMR(sex, weight, height, age);
 
-      // базовый КФА
+      // 1) Базовый КФА — только по общему уровню активности
       let kfa = activity;
-
-      // шаги (мягкая корректировка)
-      if (steps >= 8000 && steps < 10000) kfa += 0.05;
-      else if (steps >= 10000) kfa += 0.1;
-
-      // шагательные тренировки — минуты в день
-      if (stepMinutesDay >= 20 && stepMinutesDay < 40) kfa += 0.05;
-      else if (stepMinutesDay >= 40) kfa += 0.1;
-
       if (kfa > 1.9) kfa = 1.9;
 
       let tdee = bmr * kfa;
 
-      // мужчинам +100 ккал
+      // 2) Мужчинам +100 ккал
       if (sex === "male") tdee += 100;
 
+      // 3) Дополнительные калории за шаги и шагательные тренировки
+      let extraKcal = 0;
+
+      // Шаги: мягкая поправка NEAT
+      if (steps >= 4000 && steps < 7000) extraKcal += 40;
+      else if (steps >= 7000 && steps < 10000) extraKcal += 80;
+      else if (steps >= 10000) extraKcal += 130;
+
+      // Шагательные тренировки (минуты в день)
+      if (stepMinutesDay >= 10 && stepMinutesDay < 20) extraKcal += 30;
+      else if (stepMinutesDay >= 20 && stepMinutesDay < 40) extraKcal += 70;
+      else if (stepMinutesDay >= 40) extraKcal += 120;
+
+      tdee += extraKcal;
+
+      // 4) Цель (дефицит/профицит)
       let deficit = 0;
       if (goal === "lossModerate") deficit = 500;
       else if (goal === "lossSlow") deficit = 700;
       else if (goal === "gain") tdee += 200;
 
+      // Если есть гормональные нарушения – дефицит смягчаем
       if (deficit > 0) {
         if (hormones) deficit = Math.round(deficit * 0.8);
         tdee -= deficit;
@@ -952,30 +960,6 @@
 
       box.innerHTML = html;
       box.style.display = "block";
-    }
-
-    function loadStateFromStorage() {
-      try {
-        const savedNorm = localStorage.getItem(STORAGE_NORM_KEY);
-        if (savedNorm) {
-          const n = Number(savedNorm);
-          if (!isNaN(n)) {
-            dailyNorm = n;
-            normResult.innerHTML =
-              `Ваша ориентировочная норма: <strong>${dailyNorm} ккал</strong> в день.`;
-            normResult.style.display = "block";
-          }
-        }
-        const savedMeals = localStorage.getItem(STORAGE_MEALS_KEY);
-        if (savedMeals) {
-          const parsed = JSON.parse(savedMeals);
-          if (parsed && typeof parsed === "object") {
-            mealsData = Object.assign(mealsData, parsed);
-          }
-        }
-      } catch (e) {}
-      renderMeals();
-      updateDaySummary();
     }
 
     loadStateFromStorage();
