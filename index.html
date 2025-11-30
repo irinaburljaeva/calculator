@@ -398,16 +398,6 @@
             </div>
 
             <div class="field">
-              <label for="stepsPerDay">Сколько шагов в день вы проходите в среднем?</label>
-              <input id="stepsPerDay" type="number" min="0" placeholder="Например: 6000">
-            </div>
-
-            <div class="field">
-              <label for="stepMinutesDay">Сколько минут шагательных тренировок в день?</label>
-              <input id="stepMinutesDay" type="number" min="0" placeholder="Например: 20–40 минут">
-            </div>
-
-            <div class="field">
               <label for="hormones">Есть ли диагностированные гормональные нарушения?</label>
               <select id="hormones">
                 <option value="no" selected>Нет</option>
@@ -668,8 +658,6 @@
       const weight = Number(document.getElementById("weightNorm").value);
       const height = Number(document.getElementById("heightNorm").value);
       const activity = Number(document.getElementById("activity").value);
-      const steps = Number(document.getElementById("stepsPerDay").value) || 0;
-      const stepMinutesDay = Number(document.getElementById("stepMinutesDay").value) || 0;
       const hormones = document.getElementById("hormones").value === "yes";
       const goal = document.getElementById("goal").value;
 
@@ -681,7 +669,7 @@
 
       const bmr = calcBMR(sex, weight, height, age);
 
-      // 1) Базовый КФА — только по общему уровню активности
+      // 1) Базовый КФА
       let kfa = activity;
       if (kfa > 1.9) kfa = 1.9;
 
@@ -690,22 +678,7 @@
       // 2) Мужчинам +100 ккал
       if (sex === "male") tdee += 100;
 
-      // 3) Дополнительные калории за шаги и шагательные тренировки
-      let extraKcal = 0;
-
-      // Шаги: мягкая поправка NEAT
-      if (steps >= 4000 && steps < 7000) extraKcal += 40;
-      else if (steps >= 7000 && steps < 10000) extraKcal += 80;
-      else if (steps >= 10000) extraKcal += 130;
-
-      // Шагательные тренировки (минуты в день)
-      if (stepMinutesDay >= 10 && stepMinutesDay < 20) extraKcal += 30;
-      else if (stepMinutesDay >= 20 && stepMinutesDay < 40) extraKcal += 70;
-      else if (stepMinutesDay >= 40) extraKcal += 120;
-
-      tdee += extraKcal;
-
-      // 4) Цель (дефицит/профицит)
+      // 3) Цель (дефицит/профицит)
       let deficit = 0;
       if (goal === "lossModerate") deficit = 450;   // умеренный темп
       else if (goal === "lossSlow") deficit = 250;  // медленный темп
@@ -717,7 +690,7 @@
         tdee -= deficit;
       }
 
-      // 5) Минимальные безопасные значения
+      // 4) Минимальные безопасные значения
       if (sex === "female" && tdee < 1200) tdee = 1200;
       if (sex === "male" && tdee < 1400) tdee = 1400;
 
