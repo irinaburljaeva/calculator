@@ -647,7 +647,35 @@
       renderMeals();
       updateDaySummary();
     }
+    function getBmiRange(sex, age) {
+      let bmiMin, bmiMax;
 
+      if (sex === "female") {
+        if (age <= 35) {
+          bmiMin = 19;
+          bmiMax = 23;
+        } else if (age <= 55) {
+          bmiMin = 20;
+          bmiMax = 25;
+        } else {
+          bmiMin = 21;
+          bmiMax = 27;
+        }
+      } else { // male
+        if (age <= 35) {
+          bmiMin = 20;
+          bmiMax = 24;
+        } else if (age <= 55) {
+          bmiMin = 21;
+          bmiMax = 26;
+        } else {
+          bmiMin = 22;
+          bmiMax = 27;
+        }
+      }
+
+      return { bmiMin, bmiMax };
+    }
     normForm.addEventListener("submit", e => {
       e.preventDefault();
       normError.style.display = "none";
@@ -696,16 +724,17 @@
 
       dailyNorm = Math.round(tdee);
 
-      // Эффективный вес (формула Дёренберга, цель 10%/15% жира)
+            // Эффективный диапазон веса по росту, полу и возрасту
       const heightM = height / 100;
-      const sexFlag = sex === "male" ? 1 : 0;
-      const targetBF = sex === "male" ? 10 : 15;
-      let bmiTarget = (targetBF + 10.8 * sexFlag + 5.4 - 0.23 * age) / 1.2;
-      if (bmiTarget < 18) bmiTarget = 18;
-      const effectiveWeight = Math.round(bmiTarget * heightM * heightM);
+      const { bmiMin, bmiMax } = getBmiRange(sex, age);
 
-      const proteinG = Math.round(effectiveWeight * 1.6);
-      const fatG = Math.round(effectiveWeight * 0.8);
+      const weightMin = Math.round(bmiMin * heightM * heightM);
+      const weightMax = Math.round(bmiMax * heightM * heightM);
+
+      // Расчёт КБЖУ из среднего эффективного веса (центр диапазона)
+      const effectiveWeightMid = (weightMin + weightMax) / 2;
+      const proteinG = Math.round(effectiveWeightMid * 1.6);
+      const fatG = Math.round(effectiveWeightMid * 0.8);
       const proteinKcal = proteinG * 4;
       const fatKcal = fatG * 9;
       let carbsKcal = dailyNorm - proteinKcal - fatKcal;
@@ -714,11 +743,12 @@
 
       let text = `
         Ваша ориентировочная норма: <strong>${dailyNorm} ккал</strong> в день.<br><br>
-        Ориентировочное распределение КБЖУ:<br>
+        Ориентировочное распределение КБЖУ (по средней точке эффективного веса):<br>
         • Белки: <strong>${proteinG} г</strong> в день<br>
         • Жиры: <strong>${fatG} г</strong> в день<br>
         • Углеводы: <strong>${carbsG} г</strong> в день<br><br>
-        Эффективный вес для вашего роста (при ~${sex === "male" ? 10 : 15}% жира): <strong>${effectiveWeight} кг</strong>.
+        Эффективный диапазон веса для вашего роста:<br>
+        <strong>от ${weightMin} до ${weightMax} кг</strong>.
       `;
 
       if (hormones) {
