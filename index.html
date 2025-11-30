@@ -707,8 +707,8 @@
 
       // 4) Цель (дефицит/профицит)
       let deficit = 0;
-      if (goal === "lossModerate") deficit = 500;
-      else if (goal === "lossSlow") deficit = 700;
+      if (goal === "lossModerate") deficit = 450;   // умеренный темп
+      else if (goal === "lossSlow") deficit = 250;  // медленный темп
       else if (goal === "gain") tdee += 200;
 
       // Если есть гормональные нарушения – дефицит смягчаем
@@ -716,6 +716,10 @@
         if (hormones) deficit = Math.round(deficit * 0.8);
         tdee -= deficit;
       }
+
+      // 5) Минимальные безопасные значения
+      if (sex === "female" && tdee < 1200) tdee = 1200;
+      if (sex === "male" && tdee < 1400) tdee = 1400;
 
       dailyNorm = Math.round(tdee);
 
